@@ -175,7 +175,7 @@ if (settings.localResources) {
         fontURL = "/local/"
 } 
 else {
-    fontURL = "https://sidjohn1.github.io/smartthings/WeatherPanel/"
+    fontURL = "https://sidjohn1.github.io/hubitat/weatherpanel/"
 }   
     
 if (showForcast == true) {
@@ -203,14 +203,14 @@ if (showForcast == true) {
 	<meta name="Description" content="Weather Panel" />
 	<meta name="application-name" content="Weather Panel" />
 	<meta name="apple-mobile-web-app-title" content="Weather Panel">
-	<meta name="keywords" content="weather,panel,smartthings" />
+	<meta name="keywords" content="weather,panel,hubitat" />
 	<meta name="Author" content="sidjohn1" />
 <!-- Apple Web App -->
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-	<link rel="apple-touch-icon-precomposed" href="${fontURL}index.png" />
+	<link rel="apple-touch-icon-precomposed" href="${fontURL}weatherpanel.png" />
 <!-- Stylesheets -->
 <style type="text/css">
 body{
@@ -318,13 +318,13 @@ u{
     padding-right: 5%;
 }
 </style>
-<link type="text/css" rel="stylesheet" href="${fontURL}index.css"/>
-<link rel="shortcut icon" type="image/png" href="${fontURL}index.png"/>
-<link rel="manifest" href="${fontURL}manifest.json">
+<link type="text/css" rel="stylesheet" href="${fontURL}weatherpanel.css"/>
+<link rel="shortcut icon" type="image/png" href="${fontURL}weatherpanel.png"/>
+<link rel="manifest" href="${fontURL}weatherpanel.json">
     <!-- Page Title -->
     <title>Weather Panel</title>
   	<!-- Javascript -->
-<script type="text/javascript" charset="utf-8" src="${fontURL}index.js"></script>
+<script type="text/javascript" charset="utf-8" src="${fontURL}weatherpanel.js"></script>
 <script type="text/javascript">
 \$(window).load(function(){
 	var bg = '';
@@ -343,9 +343,9 @@ u{
             \$('<img src="'+bg+'"/>');
             setTimeout(function(){
 				document.body.background = bg;
-			},3000);
+			},3109);
 		});
-        setTimeout('\$("#data").click()', 1790000);
+        var c = setTimeout('\$("#data").click()', Math.floor(Math.random() * (1000000 - 800000 + 1) ) + 800000);
 	});
 	\$("#data").click();
 });
@@ -362,7 +362,7 @@ ${weatherDataContent}
     			\$(content).appendTo("#data");
     		});
     	});
-    	setTimeout(weatherData, 180500);
+    	setTimeout(weatherData, 122500);
 	}
 	weatherData();
 });
