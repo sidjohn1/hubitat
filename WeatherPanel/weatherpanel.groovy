@@ -126,10 +126,15 @@ def font1
 def font2
 def font3
 def iconW
+def rTimeout    
 def temp1TA
 def temperatureScale = getTemperatureScale()
 def weatherDataContent
 
+    
+rTimeout = Math.floor(Math.random() * (1000000 - 800000 + 1) ) + 1750000
+rTimeout = rTimeout.toInteger()
+    
 switch (settings.fontSize) {
 	case "1":
 	font1 = "50"
@@ -345,7 +350,7 @@ u{
 				document.body.background = bg;
 			},3109);
 		});
-        var c = setTimeout('\$("#data").click()', Math.floor(Math.random() * (1000000 - 800000 + 1) ) + 800000);
+        setTimeout('\$("#data").click()', ${rTimeout});
 	});
 	\$("#data").click();
 });
