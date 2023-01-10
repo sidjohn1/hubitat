@@ -1,7 +1,7 @@
 /**
  *  Weather Panel
  *
- *  Copyright 2021 Sidney Johnson
+ *  Copyright 2023 Sidney Johnson
  *  If you like this code, please support the developer via PayPal: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XKDRYZ3RUNR9Y
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -42,6 +42,7 @@ definition(
     iconUrl: "",
     iconX2Url: "",
     iconX3Url: "",
+    importUrl: 'https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanel/weatherpanel.groovy',
     oauth: true)
 
 preferences {
