@@ -20,7 +20,7 @@
 */
 
 metadata {
-	definition(name: "PurpleAir AQI Local", namespace: "sidjohn1", author: "Sidney Johnson", importUrl: "https://raw.githubusercontent.com/staze/hubitat-gmcmap/master/hubitat-gmcmap.groovy") {
+	definition(name: "PurpleAir AQI Local", namespace: "sidjohn1", author: "Sidney Johnson", importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAir/purpleairlocal.groovy") {
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
         capability "Signal Strength"
@@ -29,7 +29,7 @@ metadata {
 
         attribute "pressure", "number"
         attribute "aqi", "number"				// current AQI
-		attribute "rssi", "string"				// Signal Strength attribute (not supporting lqi)
+	attribute "rssi", "string"				// Signal Strength attribute (not supporting lqi)
         attribute 'message', 'string'
         attribute "timestamp", "string"
 	}
@@ -53,13 +53,13 @@ def updated() {
 	unschedule()
 	log.info "Device updated..."
 	log.warn "debug logging is: ${logEnable == true}"
-    if (realTime == null) {
-        realTime = false
-    }
+	if (realTime == null) {
+		realTime = false
+	}
 	if (logEnable) runIn(1800, logsOff)
 	if(updateMins != "0") {
-        Random rand = new Random()
-        int randomSeconds = rand.nextInt(49)
+        	Random rand = new Random()
+        	int randomSeconds = rand.nextInt(49)
 		schedule("${randomSeconds} */${updateMins} * ? * *", poll)
 	}
 	
