@@ -55,25 +55,24 @@ def selectDevices() {
 	    section("About") {
 			paragraph "Weather Panel displays inside and outside temp and weather infomation as a web page. Also has a random customizable background."
 			paragraph "${textVersion()}\n${textCopyright()}"
- 	   }
+		    }
 		section("Select...") {
 			input "insideTemp", "capability.temperatureMeasurement", title: "Inside Tempature...", multiple: false, required: false
-            input "outsideTemp", "capability.temperatureMeasurement", title: "Outside Tempature...", multiple: false, required: false
-            input "forcastDevice", "capability.temperatureMeasurement", title: "Forcast Device...", multiple: false, required: false
+            		input "outsideTemp", "capability.temperatureMeasurement", title: "Outside Tempature...", multiple: false, required: false
+            		input "forcastDevice", "capability.temperatureMeasurement", title: "Forcast Device...", multiple: false, required: false
 			input "showForcast", "bool", title:"Show Forcast", required: false, multiple:false
-            input "stationID", "text", title:"Station ID (Optional)", required: false, multiple:false
-            input "rainswitch", "capability.switch", title:"Rain Switch (Optional)", required: false, multiple:false
-
+            		input "stationID", "text", title:"Station ID (Optional)", required: false, multiple:false
+            		input "rainswitch", "capability.switch", title:"Rain Switch (Optional)", required: false, multiple:false
 		}
 		section(hideable: true, hidden: true, "Optional Settings") {
-            input "fontColor", "enum", title:"Select Font Color", required: false, multiple:false, defaultValue: "White", options: [3: 'Black',2: 'Ivory', 1:'White']
+            		input "fontColor", "enum", title:"Select Font Color", required: false, multiple:false, defaultValue: "White", options: [3: 'Black',2: 'Ivory', 1:'White']
 			input "fontSize", "enum", title:"Select Font Size", required: false, multiple:false, defaultValue: "Medium", options: [4: 'xSmall',3: 'Small',2: 'Medium', 1:'Large']
-            input "localResources", "bool", title: "Use Local Resources?", required: false, defaultValue: false
+            		input "localResources", "bool", title: "Use Local Resources?", required: false, defaultValue: false
 		}
 		section("Wallpaper URL") {
 			input "wallpaperUrl", "text", title: "Wallpaper URL",defaultValue: "http://", required:false
 		}
-        section() {
+        	section() {
 			href "viewURL", title: "View URL"
 		}
 	}
