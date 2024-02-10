@@ -2,7 +2,7 @@
   "packageName": "PurpleAirLocal",
   "author": "sidjohn1",
   "version": "1.0",
-  "minimumHEVersion": "2.1.9",
+  "minimumHEVersion": "2.0.0",
   "dateReleased": "2024-01-08",
   "drivers": [
     {
