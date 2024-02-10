@@ -1,4 +1,5 @@
 {
+  "name": "sidjohn1",
   "author": "sidjohn1",
   "gitHubUrl": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/README.md",
   "payPalUrl": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XKDRYZ3RUNR9Y&source=url",
@@ -7,7 +8,7 @@
       "id": "aa6a6b9e-039d-4e85-8c80-b5ddaa47d1b3",
       "name": "PurpleAirLocal",
       "category": "Integrations",
-      
+      "tags": [ "Integrations", "Misc. Devices" ],
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/packageManifest.json",
       "description": "PurpleAir Local Driver"
     }
