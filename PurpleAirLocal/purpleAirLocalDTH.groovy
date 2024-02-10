@@ -21,7 +21,7 @@
 import java.math.BigDecimal
 
 metadata {
-	definition(name: "PurpleAir AQI Local", namespace: "sidjohn1", author: "Sidney Johnson", importUrl: "https://raw.githubusercontent.com/staze/hubitat-gmcmap/master/hubitat-gmcmap.groovy") {
+	definition(name: "PurpleAir AQI Local", namespace: "sidjohn1", author: "Sidney Johnson", importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/purpleAirLocalDTH.groovy") {
         capability "Temperature Measurement";
         capability "Relative Humidity Measurement";
         capability "Air Quality";
