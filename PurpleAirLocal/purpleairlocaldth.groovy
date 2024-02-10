@@ -60,13 +60,13 @@ def updated() {
 	unschedule()
 	log.info "Device updated..."
 	log.warn "debug logging is: ${logEnable == true}"
-    if (realTime == null) {
-        realTime = false
-    }
+    	if (realTime == null) {
+        	realTime = false
+    	}
 	if (logEnable) runIn(1800, logsOff)
 	if(updateMins != "0") {
-        Random rand = new Random()
-        int randomSeconds = rand.nextInt(49)
+        	Random rand = new Random()
+        	int randomSeconds = rand.nextInt(49)
 		schedule("${randomSeconds} */${updateMins} * ? * *", poll)
 	}
 }
