@@ -37,7 +37,7 @@ metadata {
         attribute "pm01", "number";               // µg/m³ - PM1.0 particle reading - current
         attribute "pm25", "number";               // µg/m³ - PM2.5 particle reading - current
         attribute "pm10", "number";               // µg/m³ - PM10 particle reading - current
-		    attribute "rssi", "string";               // Signal Strength attribute
+	attribute "rssi", "string";               // Signal Strength attribute
         attribute "timestamp", "string"           //
 	}
 }
@@ -85,58 +85,58 @@ def poll() {
 	try {
 		httpGet(url) { resp -> 
 			if (logEnable) log.debug resp.getData()           
-                if (resp && (resp.status == 200)) {
-			        sendEvent(name: "temperature", value: resp?.data?.current_temp_f, unit: '°F')
-			        sendEvent(name: 'humidity', value: resp?.data?.current_humidity, unit: '%')
-			        sendEvent(name: 'dewPoint', value: resp?.data?.current_dewpoint_f, unit: '°F')
-              sendEvent(name: 'pressure', value: resp?.data?.pressure, unit: 'inHg')
-			        sendEvent(name: 'aqi', value: resp?.data?."pm2.5_aqi")
+        		if (resp && (resp.status == 200)) {
+				sendEvent(name: "temperature", value: resp?.data?.current_temp_f, unit: '°F')
+				sendEvent(name: 'humidity', value: resp?.data?.current_humidity, unit: '%')
+				sendEvent(name: 'dewPoint', value: resp?.data?.current_dewpoint_f, unit: '°F')
+              			sendEvent(name: 'pressure', value: resp?.data?.pressure, unit: 'inHg')
+				sendEvent(name: 'aqi', value: resp?.data?."pm2.5_aqi")
             
-			        if 		(resp?.data?."pm2.5_aqi" < 51)  {sendEvent(name: 'aqimessage', value: "GOOD: little to no health risk");}
+			        if 	(resp?.data?."pm2.5_aqi" < 51)  {sendEvent(name: 'aqimessage', value: "GOOD: little to no health risk");}
 			        else if (resp?.data?."pm2.5_aqi" < 101) {sendEvent(name: 'aqimessage', value: "MODERATE: slight risk for some people");}
 			        else if (resp?.data?."pm2.5_aqi" < 151) {sendEvent(name: 'aqimessage', value: "UNHEALTHY: for sensitive groups");}
 			        else if (resp?.data?."pm2.5_aqi" < 201) {sendEvent(name: 'aqimessage', value: "UNHEALTHY: for most people");}
 			        else if (resp?.data?."pm2.5_aqi" < 301) {sendEvent(name: 'aqimessage', value: "VERY UNHEALTHY: serious effects for everyone");}
-              else if (resp?.data?."pm2.5_aqi" < 401) {sendEvent(name: 'aqimessage', value: "HAZARDOUS: emergency conditions for everyone");}
+              			else if (resp?.data?."pm2.5_aqi" < 401) {sendEvent(name: 'aqimessage', value: "HAZARDOUS: emergency conditions for everyone");}
 			        else 				                            {sendEvent(name: 'aqimessage', value: "HAZARDOUS: emergency conditions for everyone");}
 
-              if (resp?.data?."pm1_0_atm" != null && resp?.data?."pm1_0_atm_b" != null) {
-                  pm01 = ((resp?.data?."pm1_0_atm".toBigDecimal() + resp?.data?."pm1_0_atm_b".toBigDecimal()) / 2.0 ).toBigDecimal().setScale(2, BigDecimal.ROUND_HALF_UP)
-                  if (logEnable) log.debug "PM01 Averaged: ${pm01}"
-              }
-              else if (resp?.data?."pm1_0_atm" != null && resp?.data?."pm1_0_atm_b" == null) {
-                  pm01 = (resp?.data?."pm1_0_atm".toBigDecimal())
-                  if (logEnable) log.debug "PM01 Not Averaged: ${pm01}"
-              }
-              sendEvent(name: 'pm01', value: pm01, unit: 'µg/m³')
+              			if (resp?.data?."pm1_0_atm" != null && resp?.data?."pm1_0_atm_b" != null) {
+                  			pm01 = ((resp?.data?."pm1_0_atm".toBigDecimal() + resp?.data?."pm1_0_atm_b".toBigDecimal()) / 2.0 ).toBigDecimal().setScale(2, BigDecimal.ROUND_HALF_UP)
+                  			if (logEnable) log.debug "PM01 Averaged: ${pm01}"
+              			}
+              			else if (resp?.data?."pm1_0_atm" != null && resp?.data?."pm1_0_atm_b" == null) {
+                  			pm01 = (resp?.data?."pm1_0_atm".toBigDecimal())
+                 			if (logEnable) log.debug "PM01 Not Averaged: ${pm01}"
+              			}
+              			sendEvent(name: 'pm01', value: pm01, unit: 'µg/m³')
                     
-              if (resp?.data?."pm2_5_atm" != null && resp?.data?."pm2_5_atm_b" != null) {
-                  pm25 = ((resp?.data?."pm2_5_atm".toBigDecimal() + resp?.data?."pm2_5_atm_b".toBigDecimal()) / 2.0 ).toBigDecimal().setScale(2, BigDecimal.ROUND_HALF_UP)
-                  if (logEnable) log.debug "PM25 Averaged: ${pm25}"
-              }
-              else if (resp?.data?."pm2_5_atm" != null && resp?.data?."pm2_5_atm_b" == null) {
-                  pm25 = (resp?.data?."pm2_5_atm".toBigDecimal())
-                  if (logEnable) log.debug "PM25 Not Averaged: ${pm25}"
-              }
-              sendEvent(name: 'pm25', value: pm25, unit: 'µg/m³')
+              			if (resp?.data?."pm2_5_atm" != null && resp?.data?."pm2_5_atm_b" != null) {
+                  			pm25 = ((resp?.data?."pm2_5_atm".toBigDecimal() + resp?.data?."pm2_5_atm_b".toBigDecimal()) / 2.0 ).toBigDecimal().setScale(2, BigDecimal.ROUND_HALF_UP)
+                  			if (logEnable) log.debug "PM25 Averaged: ${pm25}"
+              			}
+              			else if (resp?.data?."pm2_5_atm" != null && resp?.data?."pm2_5_atm_b" == null) {
+                  			pm25 = (resp?.data?."pm2_5_atm".toBigDecimal())
+                  			if (logEnable) log.debug "PM25 Not Averaged: ${pm25}"
+              			}
+              			sendEvent(name: 'pm25', value: pm25, unit: 'µg/m³')
                     
-              if (resp?.data?."pm10_0_atm" != null && resp?.data?."pm10_0_atm_b" != null) {
-                  pm10 = ((resp?.data?."pm10_0_atm".toBigDecimal() + resp?.data?."pm10_0_atm_b".toBigDecimal()) / 2.0 ).toBigDecimal().setScale(2, BigDecimal.ROUND_HALF_UP)
-                  if (logEnable) log.debug "PM10 Averaged: ${pm10}"
-              }
-              else if (resp?.data?."pm10_0_atm" != null && resp?.data?."pm10_0_atm_b" == null) {
-                  pm10 = (resp?.data?."pm10_0_atm".toBigDecimal())
-                  if (logEnable) log.debug "PM10 Not Averaged: ${pm10}"
-              }
-              sendEvent(name: 'pm10', value: pm10, unit: 'µg/m³')
+              			if (resp?.data?."pm10_0_atm" != null && resp?.data?."pm10_0_atm_b" != null) {
+                  			pm10 = ((resp?.data?."pm10_0_atm".toBigDecimal() + resp?.data?."pm10_0_atm_b".toBigDecimal()) / 2.0 ).toBigDecimal().setScale(2, BigDecimal.ROUND_HALF_UP)
+                  			if (logEnable) log.debug "PM10 Averaged: ${pm10}"
+              			}
+              			else if (resp?.data?."pm10_0_atm" != null && resp?.data?."pm10_0_atm_b" == null) {
+                  			pm10 = (resp?.data?."pm10_0_atm".toBigDecimal())
+                  			if (logEnable) log.debug "PM10 Not Averaged: ${pm10}"
+              			}
+              			sendEvent(name: 'pm10', value: pm10, unit: 'µg/m³')
                         
 			        sendEvent(name: 'rssi', value: resp?.data?.rssi, unit: 'db')
 			        sendEvent(name: 'timestamp', value: resp?.data?.DateTime, displayed: false)
-                }
+                	}
             else {
                 log.error "Invalid response for PurpleAir request: ${resp}"
-            }
-		}
+            	}
+	}
 	} catch(Exception e) {
 		log.debug "error occured calling httpget ${e}"
 	}
