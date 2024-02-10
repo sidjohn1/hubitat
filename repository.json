@@ -7,6 +7,7 @@
       "id": "aa6a6b9e-039d-4e85-8c80-b5ddaa47d1b3",
       "name": "PurpleAirLocal",
       "category": "Integrations",
+      
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/packageManifest.json",
       "description": "PurpleAir Local Driver"
     }
