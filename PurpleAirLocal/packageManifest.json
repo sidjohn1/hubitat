@@ -11,6 +11,7 @@
       "namespace": "sidjohn1",
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/purpleAirLocalDTH.groovy",
       "documentationLink": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/README.MD",
+      "communityLink": "https://community.hubitat.com/t/release-purpleair-local-driver/",
       "required": true
     }
   ]
