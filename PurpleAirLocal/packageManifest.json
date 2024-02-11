@@ -10,6 +10,7 @@
       "name": "PurpleAir AQI Local",
       "namespace": "sidjohn1",
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/purpleAirLocalDTH.groovy",
+      "documentationLink": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/README.MD",
       "required": true
     }
   ]
