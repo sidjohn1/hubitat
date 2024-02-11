@@ -76,9 +76,10 @@ def parse(String description) {
 }
 
 def poll() {
-    def pm01
-    def pm25
-    def pm10
+	def aqi
+	def pm01
+	def pm25
+	def pm10
 	if (logEnable) log.debug "Device polling..."
 	def url = "http://${ipAddress}/json?live=${realTime}"
     if (logEnable) log.debug url  
@@ -90,15 +91,24 @@ def poll() {
 				sendEvent(name: 'humidity', value: resp?.data?.current_humidity, unit: '%')
 				sendEvent(name: 'dewPoint', value: resp?.data?.current_dewpoint_f, unit: '°F')
               			sendEvent(name: 'pressure', value: resp?.data?.pressure, unit: 'inHg')
-				sendEvent(name: 'aqi', value: resp?.data?."pm2.5_aqi")
+
+				if (resp?.data?."pm2.5_aqi" != null && resp?.data?."pm2.5_aqi_b" != null) {
+                  			aqi = ((resp?.data?."pm2.5_aqi".toBigDecimal() + resp?.data?."pm2.5_aqi_b".toBigDecimal()) / 2.0 ).toBigDecimal().setScale(2, BigDecimal.ROUND_HALF_UP)
+                  			if (logEnable) log.debug "AQI Averaged: ${aqi}"
+              			}
+              			else if (resp?.data?."pm2.5_aqi" != null && resp?.data?."pm2.5_aqi_b" == null) {
+                  			aqi = (resp?.data?."pm2.5_aqi".toBigDecimal())
+                 			if (logEnable) log.debug "AQI Not Averaged: ${aqi}"
+              			}
+				sendEvent(name: 'aqi', value: aqi)
             
-			        if 	(resp?.data?."pm2.5_aqi" < 51)  {sendEvent(name: 'aqimessage', value: "GOOD: little to no health risk");}
-			        else if (resp?.data?."pm2.5_aqi" < 101) {sendEvent(name: 'aqimessage', value: "MODERATE: slight risk for some people");}
-			        else if (resp?.data?."pm2.5_aqi" < 151) {sendEvent(name: 'aqimessage', value: "UNHEALTHY: for sensitive groups");}
-			        else if (resp?.data?."pm2.5_aqi" < 201) {sendEvent(name: 'aqimessage', value: "UNHEALTHY: for most people");}
-			        else if (resp?.data?."pm2.5_aqi" < 301) {sendEvent(name: 'aqimessage', value: "VERY UNHEALTHY: serious effects for everyone");}
-              			else if (resp?.data?."pm2.5_aqi" < 401) {sendEvent(name: 'aqimessage', value: "HAZARDOUS: emergency conditions for everyone");}
-			        else 				                            {sendEvent(name: 'aqimessage', value: "HAZARDOUS: emergency conditions for everyone");}
+			        if 	(aqi < 51)  {sendEvent(name: 'aqimessage', value: "GOOD: little to no health risk");}
+			        else if (aqi < 101) {sendEvent(name: 'aqimessage', value: "MODERATE: slight risk for some people");}
+			        else if (aqi < 151) {sendEvent(name: 'aqimessage', value: "UNHEALTHY: for sensitive groups");}
+			        else if (aqi < 201) {sendEvent(name: 'aqimessage', value: "UNHEALTHY: for most people");}
+			        else if (aqi < 301) {sendEvent(name: 'aqimessage', value: "VERY UNHEALTHY: serious effects for everyone");}
+              			else if (aqi < 401) {sendEvent(name: 'aqimessage', value: "HAZARDOUS: emergency conditions for everyone");}
+			        else {sendEvent(name: 'aqimessage', value: "HAZARDOUS: emergency conditions for everyone");}
 
               			if (resp?.data?."pm1_0_atm" != null && resp?.data?."pm1_0_atm_b" != null) {
                   			pm01 = ((resp?.data?."pm1_0_atm".toBigDecimal() + resp?.data?."pm1_0_atm_b".toBigDecimal()) / 2.0 ).toBigDecimal().setScale(2, BigDecimal.ROUND_HALF_UP)
