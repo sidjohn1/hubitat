@@ -5,7 +5,7 @@
   "packages": [
     {
       "id": "aa6a6b9e-039d-4e85-8c80-b5ddaa47d1b3",
-      "name": "PurpleAirLocal",
+      "name": "PurpleAir Local Driver",
       "category": "Integrations",
       "tags": ["Integrations", "Misc. Devices", "LAN"],
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/packageManifest.json",
