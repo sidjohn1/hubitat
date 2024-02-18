@@ -10,6 +10,14 @@
       "tags": ["Integrations", "Misc. Devices", "LAN"],
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/packageManifest.json",
       "description": "PurpleAir Local Driver"
+    },
+    {
+      "id": "93c43a3c-278a-46c9-a2a8-064c6196092a",
+      "name": "GMC Geiger Counter Local",
+      "category": "Integrations",
+      "tags": ["Integrations", "Misc. Devices", "LAN"],
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/packageManifest.json",
+      "description": "GMC Geiger Counter Local"
     }
   ]
 }
