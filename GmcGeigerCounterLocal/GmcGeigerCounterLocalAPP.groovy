@@ -21,9 +21,9 @@
 
 definition(
         name: "GMC Geiger Counter Local",
+	description: "GMC Geiger Counter Local",
         namespace: "sidjohn1",
         author: "sidjohn1",
-        description: "GMC Geiger Counter Local",
         oauth: true,
 	importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalAPP.groovy"){
 }
