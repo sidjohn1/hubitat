@@ -7,7 +7,7 @@
   "drivers": [
     {
       "id": "1f44bc69-91d2-4c93-b729-58395f854991",
-      "name": "GMC Geiger Counter Local",
+      "name": "GMC Geiger Counter Local Device",
       "namespace": "sidjohn1",
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalDTH.groovy",
       "required": true
@@ -16,7 +16,7 @@
   "apps": [
     {
       "id": "1eb6aee9-8cd9-49b6-8153-34f4e238e330",
-      "name": "GMC Geiger Counter Local",
+      "name": "GMC Geiger Counter Local App",
       "namespace": "sidjohn1",
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalAPP.groovy",
       "required": true,
