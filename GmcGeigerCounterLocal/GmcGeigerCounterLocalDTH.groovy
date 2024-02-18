@@ -21,7 +21,7 @@
 
 metadata {
 	definition(
-		name: "GMC Geiger Counter Local",
+		name: "GMC Geiger Counter Local Device",
 		description: "GMC Geiger Counter Local",
 		namespace: "sidjohn1",
 		author: "sidjohn1", 
