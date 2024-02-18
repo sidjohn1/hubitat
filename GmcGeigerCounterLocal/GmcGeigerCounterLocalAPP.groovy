@@ -25,6 +25,8 @@ definition(
         namespace: "sidjohn1",
         author: "sidjohn1",
         oauth: true,
+	iconUrl: "",
+    	iconX2Url: "",
 	importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalAPP.groovy"){
 }
 
