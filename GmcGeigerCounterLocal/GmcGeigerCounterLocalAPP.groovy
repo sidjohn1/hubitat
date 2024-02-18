@@ -27,7 +27,8 @@ definition(
         category: "Amazing Apps",
         iconUrl: "",
         iconX2Url: "",
-        oauth: [displayName: "Local GMC Geiger Counter", displayLink: "https://sharptools.io"]){
+        oauth: [displayName: "Local GMC Geiger Counter", displayLink: "https://sharptools.io"],
+	importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalDTH.groovy"){
 }
 
 preferences(){
