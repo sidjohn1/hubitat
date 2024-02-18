@@ -20,7 +20,7 @@
 */
 
 definition(
-        name: "GMC Geiger Counter Local",
+        name: "GMC Geiger Counter Local App",
 	description: "GMC Geiger Counter Local",
         namespace: "sidjohn1",
         author: "sidjohn1",
@@ -81,7 +81,7 @@ def renderWebsite(){
     
     if (params?.GID){
         if (!getChildDevice(params?.GID)){
-            addChildDevice("sidjohn1", "GMC Geiger Counter Local", params?.GID, ["name": "Geiger Counter ${params?.GID}", "label": "Local GMC Geiger Counter", isComponent: false])
+            addChildDevice("sidjohn1", "GMC Geiger Counter Local Device", params?.GID, ["name": "Geiger Counter ${params?.GID}", "label": "Local GMC Geiger Counter", isComponent: false])
             def dev = getChildDevice(params?.GID)
             dev.sendEvent(name: "CPM", value: "${params?.CPM}")
 	        dev.sendEvent(name: "ACPM", value: "${params?.ACPM}")	
