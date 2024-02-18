@@ -24,10 +24,7 @@ definition(
         namespace: "sidjohn1",
         author: "sidjohn1",
         description: "GMC Geiger Counter Local",
-        category: "Amazing Apps",
-        iconUrl: "",
-        iconX2Url: "",
-        oauth: [displayName: "Local GMC Geiger Counter", displayLink: "https://sharptools.io"],
+        oauth: true,
 	importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalAPP.groovy"){
 }
 
