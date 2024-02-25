@@ -29,7 +29,7 @@ metadata {
 		capability "Sensor"
 		attribute "CPM", "NUMBER"                // Count Per Minute reading from this Geiger Counter
 		attribute "ACPM", "NUMBER"               // Average Count Per Minute reading from this Geiger Counter
-		attribute "uSv", "NUMBER"                // uSv/h reading from this Geiger Counter
+		attribute "uSv", "NUMBER"                // microSievert per hour reading from this Geiger Counter
         attribute "upload", "string"             // upload responce from gmcmap.com
         attribute "timestamp", "string"          // Last update
 	}
