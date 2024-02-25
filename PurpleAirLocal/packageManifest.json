@@ -4,7 +4,7 @@
   "version": "1.0",
   "minimumHEVersion": "2.0.0",
   "dateReleased": "2024-01-08",
-  "documentationLink": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/README.MD",
+  "documentationLink": "https://github.com/sidjohn1/hubitat/blob/main/PurpleAirLocal/README.MD",
   "communityLink": "https://community.hubitat.com/t/release-purpleair-local-driver/",
   "drivers": [
     {
