@@ -5,7 +5,7 @@
   "minimumHEVersion": "2.1.9",
   "dateReleased": "2024-02-18",
   "documentationLink": "https://github.com/sidjohn1/hubitat/blob/main/GmcGeigerCounterLocal/README.md",
-  "communityLink": "https://community.hubitat.com/t/release-purpleair-local-driver/",
+  "communityLink": "https://community.hubitat.com/t/release-gmc-geiger-counter-local/",
   "drivers": [
     {
       "id": "1f44bc69-91d2-4c93-b729-58395f854991",
