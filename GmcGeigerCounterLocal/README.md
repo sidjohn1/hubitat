@@ -3,7 +3,7 @@ GMC Geiger Counter Local App and Driver receives the number of ionizing events d
 It has been tested on a GQ GMC-600+, but should also be compatible with the GQ GMC Geiger Counter with wifi See: https://www.gqelectronicsllc.com/support/GMC_Selection_Guide.htm<br>
 <br>
 <h2>Instalation</h2>
-Due to device limitations a http proxy is required for data to be pushed into hubitat. nginx is documented in the smartapp but any other http proxy should work as well. Use the NGINX Config section to point the proxy server to the smartapp<br><br>
+Due to device limitations a http proxy is required for data to be pushed into hubitat. nginx is documented in the smartapp but any other http proxy should work as well. Use the NGINX Config section in the smartapp to point the proxy server to the smartapp<br><br>
 To test the proxy and smartapp:<br>
 curl "http://{proxy ip address}/gmc"<br>
 Should return:<br>
