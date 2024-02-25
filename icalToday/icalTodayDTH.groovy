@@ -178,6 +178,7 @@ void getdata(){
     
 //log.debug"end"
     if(attrString.length() >= 1024) log.warn "To many Char. please reduce max number of events or turn off location = ${attrString.length()}"
+    if(attrString.length() <= 1) attrString = "No Events"
     sendEvent(name:"tileAttr",value:attrString)
     log.info "done get"
     runIn(state.updatefeq,getdata)
