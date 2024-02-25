@@ -8,5 +8,5 @@ To test the proxy and smartapp:<br>
 curl "http://{proxy ip address}/gmc"<br>
 Should return:<br>
 <html><head><body>Error! Geiger Counter is not found.ERR2.</body></html><br><br>
-Use the user guide to setup wifi ssid and password. Once connected to wifi change the Server Website to the http proxy server listening on port 80, the URL to gmc to match the Nginx settings in the smartapp.<br>User ID is optional in general, but required to upload data to gmcmaps.com. Counter ID is required to be set to create a device in Hubitat and must be unique for each device.
+Use the GQ GMC user guide to setup wifi ssid and password. Once connected to wifi change the Server Website to the http proxy server listening on port 80, the URL to gmc to match the Nginx settings in the smartapp.<br>User ID is optional in general, but required to upload data to gmcmaps.com. Counter ID is required to be set to create a device in Hubitat and must be unique for each device.
 https://www.gqelectronicsllc.com/GMC-600UserGuide.pdf
