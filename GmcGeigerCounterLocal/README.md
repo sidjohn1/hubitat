@@ -1,5 +1,5 @@
 <h1>GMC Geiger Counter Local</h1>
-GMC Geiger Counter Local App and Driver receives the number of ionizing events detected or counts per minute (CPM), Average Count Per Minute (ACPM) and microSievert per hour (uSv) reading directly from the device, no internet connection or cloud needed. It can also upload the values to gmcmaps.com 
+GMC Geiger Counter Local App and Driver receives the number of ionizing events detected or counts per minute (CPM), Average Count Per Minute (ACPM) and microSievert per hour (uSv) reading directly from the device, no internet connection or cloud needed. It can also upload the values to gmcmaps.com.<br>
 It has been tested on a GQ GMC-600+, but should also be compatible with the GQ GMC Geiger Counter with wifi See: https://www.gqelectronicsllc.com/support/GMC_Selection_Guide.htm<br>
 <br>
 <h2>Instalation</h2>
