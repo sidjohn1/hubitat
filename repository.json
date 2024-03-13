@@ -7,7 +7,7 @@
       "id": "aa6a6b9e-039d-4e85-8c80-b5ddaa47d1b3",
       "name": "PurpleAir Local Driver",
       "category": "Integrations",
-      "tags": ["Integrations", "Misc. Devices", "LAN"],
+      "tags": ["Misc. Devices", "LAN"],
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/PurpleAirLocal/packageManifest.json",
       "description": "PurpleAir Local Driver"
     },
@@ -15,7 +15,7 @@
       "id": "93c43a3c-278a-46c9-a2a8-064c6196092a",
       "name": "GMC Geiger Counter Local",
       "category": "Integrations",
-      "tags": ["Integrations", "Misc. Devices", "LAN"],
+      "tags": ["Misc. Devices", "LAN"],
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/packageManifest.json",
       "description": "GMC Geiger Counter Local"
     },
@@ -23,8 +23,8 @@
       "id": "a806e98f-9f33-4ce2-a2e1-993ea96ef1f8",
       "name": "Weather Panel for Apple Shortcuts",
       "category": "Integrations",
-      "tags": ["Integrations", "Misc. Devices", "LAN", "Weather"],
-      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/packageManifest.json",
+      "tags": ["Misc. Devices", "LAN", "Weather", "Temperature & Humidity", "Dashboards"],
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/packageManifest.json",
       "description": "Weather Panel and device for Apple Shortcuts"
     }
   ]
