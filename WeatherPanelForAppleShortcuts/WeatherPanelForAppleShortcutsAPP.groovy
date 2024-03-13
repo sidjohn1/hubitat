@@ -43,7 +43,9 @@ preferences {
 def selectDevices() {
     if(!state.accessToken){	
         //enable OAuth in the app settings or this call will fail
-        createAccessToken()	
+        createAccessToken()
+	//create weather device or save will fail
+	createChildDevice()
     }
 	return dynamicPage(name: "selectDevices", install: true, uninstall: true) {
 	    section("About") {
@@ -94,7 +96,6 @@ mappings {
 }
 
 def installed() {
-	createChildDevice()
 	log.debug "Installed with settings: ${settings}"
 	initialize()
 }
