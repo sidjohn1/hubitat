@@ -1,5 +1,8 @@
-/*
+/**
+*  Weather Panel for Apple Shortcuts
 *
+*  Copyright 2024 Sidney Johnson
+*  If you like this code, please support the developer via PayPal: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XKDRYZ3RUNR9Y
 *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 *  in compliance with the License. You may obtain a copy of the License at:
 *
@@ -12,8 +15,7 @@
 *  Weather Panel For Apple Shortcuts Local Device
 *
 *  Author: Sidney Johnson
-*
-*  Date: 2024-03-10
+*  Date: 2024-03-18
 *
 *	1.0 - Initial Release
 *
