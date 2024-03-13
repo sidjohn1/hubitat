@@ -15,17 +15,15 @@
  *
  *	Version: 1.0 - Apple Weather via shortcuts, converted day/night detection to hub sunrise/sunset
  *	Version: 1.1 - Added humidity
+ *	Version: 1.2 - Added child device, and code refactor
  *
  */
 
-import java.text.SimpleDateFormat
-import groovy.time.TimeCategory
-
 definition(
-    name: "Weather Panel for Apple Shortcuts",
+    name: "Weather Panel For Apple Shortcuts Local App",
     namespace: "sidjohn1",
     author: "Sidney Johnson",
-    description: "Weather Panel, a Hubitat web client",
+    description: "Weather Panel For Apple Shortcuts",
     category: "Convenience",
     iconUrl: "",
     iconX2Url: "",
@@ -56,9 +54,7 @@ def selectDevices() {
             input "outsideHumid", "capability.relativeHumidityMeasurement", title: "Outside Humidity...", multiple: false, required: true
             }
             input "showForcast", "bool", title:"Show Forcast", required: true, multiple:false, submitOnChange: true, defaultValue: false
-            if (settings.showForcast){
-                input "forcastDevice", "capability.actuator", title: "Forcast Device...", multiple: false, required: true
-            }
+            input "forcastDevice", "device.WeatherPanelForAppleShortcutsLocalDevice", title: "Forcast Device...", multiple: false, required: true
 		}
 		section(hideable: true, hidden: true, "Optional Settings") {
             input "fontColor", "enum", title:"Select Font Color", required: false, multiple:false, defaultValue: "White", options: [3: 'Black',2: 'Ivory', 1:'White']
@@ -77,6 +73,8 @@ def selectDevices() {
 def viewURL() {
 	return dynamicPage(name: "viewURL", title: "${title ?: location.name} Weather Pannel URL", install:false) {
 		section() {
+            paragraph "Copy the URL below to the URL textbox in shortcuts"
+			input "weatherUrl", "text", title: "URL",defaultValue: "${generateURL("update")}", required:false
 			paragraph "Copy the URL below to any modern browser to view your ${title ?: location.name}s' Weather Panel. Add a shortcut to home screen of your mobile device to run as a native app."
 			input "weatherUrl", "text", title: "URL",defaultValue: "${generateURL("html")}", required:false
 			href url:"${generateURL("html")}", style:"embedded", required:false, title:"View", description:"Tap to view, then click \"Done\""
@@ -87,7 +85,7 @@ def viewURL() {
 mappings {
     path("/html") { action: [GET: "generateHtml"] }
 	path("/json") {	action: [GET: "generateJson"] }
-    path("/update") {	action: [GET: "recieveUpdate"] }
+    path("/update") {	action: [POST: "recieveUpdate"] }
 }
 
 def installed() {
@@ -105,18 +103,40 @@ def updated() {
 def initialize() {
 	log.info "Weather Panel ${textVersion()} ${textCopyright()}"
 	generateURL()
+    if (settings.showForcast){
+        createChildDevice()
+    }
+}
+
+def uninstalled() {
+	removeChildDevices(getChildDevices())
 }
 
 def recieveUpdate() {
-	render contentType: "text/html", headers: ["Access-Control-Allow-Origin": "*"], data: "<!DOCTYPE html>\n<html></html>"
+    log.info "Recieved metrics"
+    render contentType: "text/plain", data: "OK", status: 200
+    def json 
+    try {
+        json = parseJson(request.body).sort()
+        log.debug json
+        def dev = getChildDevice(deviceUID())
+        json.each {
+            dev.sendEvent(name: "${it.key}", value: "${it.value}")
+        }
+        dev.sendEvent(name: 'timestamp', value: now())
+        }
+        catch (Exception e) {
+            log.error "JSON received from device is invalid! ${request.body}: ${e}"
+        return
+    }
 }
 
 def generateHtml() {
-	render contentType: "text/html", headers: ["Access-Control-Allow-Origin": "*"], data: "<!DOCTYPE html>\n<html>\n<head>${head()}</head>\n<body>\n${body()}\n</body></html>"
+	render contentType: "text/html", headers: ["Access-Control-Allow-Origin": "*"], data: "<!DOCTYPE html>\n<html>\n<head>${head()}</head>\n<body>\n${body()}\n</body></html>", status: 200
 }
 
 def generateJson() {
-	render contentType: "application/json", headers: ["Access-Control-Allow-Origin": "*"], data: "${jsonData()}"
+	render contentType: "application/json", headers: ["Access-Control-Allow-Origin": "*"], data: "${jsonData()}", status: 200
 }
 
 def head() {
@@ -132,9 +152,7 @@ def humidHTML2 = ""
 def iconW
 def rTimeout    
 def temp1TA
-def temperatureScale = getTemperatureScale()
 def weatherDataContent
-
     
 rTimeout = Math.floor(Math.random() * (1000000 - 800000 + 1) ) + 1750000
 rTimeout = rTimeout.toInteger()
@@ -179,15 +197,8 @@ switch (settings.fontColor) {
     color3 = "255,255,255"
 	break;
 }
-
-if (settings.localResources) {
-        fontURL = "/local/"
-} 
-else {
-    fontURL = "https://sidjohn1.github.io/hubitat/weatherpanel/"
-}
     
-if (settings.insideHumid && settings.outsideHumid) {
+if (showHumid == true) {
     humidHTML1 = "</b><t>&#47;</t>' + item.humid1 + '<b>&#37;"
     humidHTML2 = "</b><t>&#47;</t>' + item.humid2 + '<b>&#37;"
 } 
@@ -196,20 +207,20 @@ if (showForcast == true) {
 	iconW = "47"
 	temp1TA = "right"
 	weatherDataContent = """	    		content += '<div id="icon"><i class="wi wi-' + item.icon + '"></i></div>';
-	    		content += '<div id="temp1" class="text3"><p>' + item.temp1 + '°<b>${temperatureScale}${humidHTML1}&nbsp;<br>Inside&nbsp;</b><br>' + item.temp2 + '°<b>${temperatureScale}${humidHTML2}&nbsp;<br>Outside&nbsp;</b><br></p></div>';
+	    		content += '<div id="temp1" class="text3"><p>' + item.temp1 + '°<b>${getTemperatureScale()}${humidHTML1}&nbsp;<br>Inside&nbsp;</b><br>' + item.temp2 + '°<b>${getTemperatureScale()}${humidHTML2}&nbsp;<br>Outside&nbsp;</b><br></p></div>';
     			content += '<div id="cond" class="text2"><p>' + item.cond + '&nbsp;</p></div>';
-    			content += '<div id="forecast" class="text3"><p>' + item.forecastDay + '<br><i class="wi wi-' + item.forecastIcon + '"></i>&nbsp;&nbsp;' + item.forecastDayHigh + '°<br><u>' + item.forecastDayLow + '°</u></p><br></div>';
-    			content += '<div id="forecast" class="text3"><p>' + item.forecastDay1 + '<br><i class="wi wi-' + item.forecastIcon1 + '"></i>&nbsp;&nbsp;' + item.forecastDayHigh1 + '°<br><u>' + item.forecastDayLow1 + '°</u></p><br></div>';
-    			content += '<div id="forecast" class="text3"><p>' + item.forecastDay2 + '<br><i class="wi wi-' + item.forecastIcon2 + '"></i>&nbsp;&nbsp;' + item.forecastDayHigh2 + '°<br><u>' + item.forecastDayLow2 + '°</u></p><br></div>';
-    			content += '<div id="forecast" class="text3"><p>' + item.forecastDay3 + '<br><i class="wi wi-' + item.forecastIcon3 + '"></i>&nbsp;&nbsp;' + item.forecastDayHigh3 + '°<br><u>' + item.forecastDayLow3 + '°</u></p><br></div>';"""
+    			content += '<div id="forecast" class="text3"><p>' + item.forcastDay1Day + '<br><i class="wi wi-' + item.forecastDay1Icon + '"></i>&nbsp;&nbsp;' + item.forcastDay1High + '°<br><u>' + item.forcastDay1Low + '°</u></p><br></div>';
+    			content += '<div id="forecast" class="text3"><p>' + item.forcastDay2Day + '<br><i class="wi wi-' + item.forecastDay2Icon + '"></i>&nbsp;&nbsp;' + item.forcastDay2High + '°<br><u>' + item.forcastDay2Low + '°</u></p><br></div>';
+    			content += '<div id="forecast" class="text3"><p>' + item.forcastDay3Day + '<br><i class="wi wi-' + item.forecastDay3Icon + '"></i>&nbsp;&nbsp;' + item.forcastDay3High + '°<br><u>' + item.forcastDay3Low + '°</u></p><br></div>';
+    			content += '<div id="forecast" class="text3"><p>' + item.forcastDay4Day + '<br><i class="wi wi-' + item.forecastDay4Icon + '"></i>&nbsp;&nbsp;' + item.forcastDay4High + '°<br><u>' + item.forcastDay4Low + '°</u></p><br></div>';"""
                 
 }
    else {
 	iconW = "100"
 	temp1TA = "left"
    	weatherDataContent = """	    		content += '<div id="icon"><i class="wi wi-' + item.icon + '"></i></div>';
-	    		content += '<div id="temp1" class="text1"><p>' + item.temp1 + '°<b>${temperatureScale}<br>Inside</b></p></div>';
-	    		content += '<div id="temp2" class="text1"><p>' + item.temp2 + '°<b>${temperatureScale}<br>Outside</b></p></div>';
+	    		content += '<div id="temp1" class="text1"><p>' + item.temp1 + '°<b>${getTemperatureScale()}<br>Inside</b></p></div>';
+	    		content += '<div id="temp2" class="text1"><p>' + item.temp2 + '°<b>${getTemperatureScale()}<br>Outside</b></p></div>';
     			content += '<div id="cond" class="text1"><p>' + item.cond + '&nbsp;</p></div>';"""
 }
 
@@ -225,7 +236,7 @@ if (showForcast == true) {
 	<meta name="mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-	<link rel="apple-touch-icon-precomposed" href="${fontURL}weatherpanel.png" />
+	<link rel="apple-touch-icon-precomposed" href="/local/weatherpanel.png" />
 <!-- Stylesheets -->
 <style type="text/css">
 body{
@@ -309,7 +320,25 @@ u{
 	font-size: ${font2}vh;
 	line-height: 13vh;
 }
+#humid1{
+	text-align: ${temp1TA};
+	float: left;
+	width: 48%;
+	margin-left: 2%;
+	font-size: 20px;
+	font-size: ${font2}vh;
+	line-height: 13vh;
+}
 #temp2{
+	text-align: right;
+	float: right;
+	width: 48%;
+	margin-right: 2%;
+	font-size: 20px;
+	font-size: ${font2}vh;
+	line-height: 13vh;
+}
+#humid2{
 	text-align: right;
 	float: right;
 	width: 48%;
@@ -336,13 +365,13 @@ u{
     padding-right: 5%;
 }
 </style>
-<link type="text/css" rel="stylesheet" href="${fontURL}weatherpanel.css"/>
-<link rel="shortcut icon" type="image/png" href="${fontURL}weatherpanel.png"/>
-<link rel="manifest" href="${fontURL}weatherpanel.json">
+<link type="text/css" rel="stylesheet" href="/local/weatherpanel.css"/>
+<link rel="shortcut icon" type="image/png" href="/local/weatherpanel.png"/>
+<link rel="manifest" href="/local/weatherpanel.json">
     <!-- Page Title -->
     <title>Weather Panel</title>
   	<!-- Javascript -->
-<script type="text/javascript" charset="utf-8" src="${fontURL}weatherpanel.js"></script>
+<script type="text/javascript" charset="utf-8" src="/local/weatherpanel.js"></script>
 <script type="text/javascript">
 \$(window).load(function(){
 	var bg = '';
@@ -394,58 +423,37 @@ def body() {
 
 def jsonData(){
 //log.debug "refreshing weather"
-sendEvent(linkText:app.label, name:"weatherRefresh", value:"refreshing weather", descriptionText:"weatherRefresh is refreshing weather", eventType:"SOLUTION_EVENT", displayed: true)
+sendEvent(name:"weatherRefresh", value:"refreshing weather", descriptionText:"weatherRefresh is refreshing weather", eventType:"SOLUTION_EVENT", displayed: true)
 
-def forecastDay1
-def forecastDay1Icon
-def forecastDay2
-def forecastDay2Icon
-def forecastDay3
-def forecastDay3Icon
-def forecastDay4
-def forecastDay4Icon
-def humid1
-def humid2
 def weatherIcons = []
 def currentTime = now()
 def sunriseTime = location.sunrise
 def sunsetTime = location.sunset
 
-forecastDay1 = forcastDevice.currentValue("zforecast_1").split(':')
-forecastDay2 = forcastDevice.currentValue("zforecast_2").split(':')
-forecastDay3 = forcastDevice.currentValue("zforecast_3").split(':')
-forecastDay4 = forcastDevice.currentValue("zforecast_4").split(':')
-
 if (settings.insideHumid && settings.outsideHumid) {
     humid1 = insideHumid.currentValue("humidity")
     humid2 = outsideHumid.currentValue("humidity")
 } 
-else {
-    humid1 = "na"
-    humid2 = "na"
-}
-    
+   
 if(currentTime > sunriseTime.time && currentTime < sunsetTime.time) {
         weatherIcons = ["Sunny": "day-sunny", "Clear": "day-sunny", "Mostly Clear": "day-sunny","Mostly Sunny": "day-sunny-overcast", "Mostly Cloudy": "day-cloudy", "Partly Cloudy": "day-cloudy", "Cloudy": "day-cloudy", "Windy": "day-windy", "Breezy, light wind": "day-windy", "Snow": "day-snow", "rain_snow": "day-rain-mix", "rain_sleet": "day-sleet", "snow_sleet": "day-sleet", "fzra": "day-sleet", "rain_fzra": "day-sleet", "snow_fzra": "day-sleet", "sleet": "day-sleet", "Drizzle": "day-sprinkle", "Rain": "day-showers", "Heavy Rain": "day-rain", "Thunderstorm": "day-storm-showers", "tsra_hi": "day-storm-showers", "tornado": "tornado", "hurricane": "hurricane", "tropical_storm": "hurricane", "dust": "day-haze", "smokey": "day-haze", "haze": "day-haze", "hot": "hot", "cold": "snowflake-cold", "blizzard": "snowflake-cold", "fog": "day-haze"]
 }
 else{
     	weatherIcons = ["Sunny": "night-clear", "Clear": "night-clear", "Mostly Clear": "night-clear", "Mostly Sunny": "night-alt-partly-cloudy", "Mostly Cloudy": "night-alt-cloudy", "Partly Cloudy": "night-alt-cloudy", "Cloudy": "night-alt-cloudy", "Windy": "alt-cloudy-windy", "Breezy, light wind": "alt-cloudy-windy", "Snow": "night-alt-snow", "rain_snow": "night-alt-rain-mix", "rain_sleet": "night-alt-sleet", "snow_sleet": "night-alt-sleet", "fzra": "night-alt-sleet", "rain_fzra": "night-alt-sleet", "snow_fzra": "night-alt-sleet", "sleet": "night-alt-sleet", "Drizzle": "night-alt-sprinkle", "Rain": "night-alt-showers", "Heavy Rain": "night-alt-rain", "Thunderstorm": "night-alt-storm-showers", "tsra_hi": "night-alt-storm-showers", "tornado": "tornado", "hurricane": "hurricane", "tropical_storm": "night-alt-thunderstorm", "dust": "night-fog", "smokey": "night-fog", "haze": "night-fog", "hot": "hot","cold": "snowflake-cold","blizzard": "snowflake-cold","fog": "night-fog"]
 }
-   
-def forecastNowIcon = forcastDevice.currentValue("textDescription")
-forecastNowIcon = weatherIcons[forecastNowIcon.toString()] ?:"na"
-def forecastNowText = forcastDevice.currentValue("textDescription") ?:"Unknown"
-forecastDay1Icon = weatherIcons[forecastDay1[3].toString()] ?:"na"
-forecastDay2Icon = weatherIcons[forecastDay2[3].toString()] ?:"na"
-forecastDay3Icon = weatherIcons[forecastDay3[3].toString()] ?:"na"
-forecastDay4Icon = weatherIcons[forecastDay4[3].toString()] ?:"na"
 
-"""{"data": [{"icon":"${forecastNowIcon}","cond":"${forecastNowText}","temp1":"${Math.round(insideTemp.currentValue("temperature"))}","temp2":"${Math.round(outsideTemp.currentValue("temperature"))}"
-,"humid1":"${humid1}","humid2":"${humid2}"
-,"forecastDay":"${forecastDay1[0]}","forecastIcon":"${forecastDay1Icon}","forecastDayHigh":"${forecastDay1[1].substring(0, forecastDay1[1].length() - 2)}","forecastDayLow":"${forecastDay1[2].substring(0, forecastDay1[2].length() - 2)}"
-,"forecastDay1":"${forecastDay2[0]}","forecastIcon1":"${forecastDay2Icon}","forecastDayHigh1":"${forecastDay2[1].substring(0, forecastDay2[1].length() - 2)}","forecastDayLow1":"${forecastDay2[2].substring(0, forecastDay2[2].length() - 2)}"
-,"forecastDay2":"${forecastDay3[0]}","forecastIcon2":"${forecastDay3Icon}","forecastDayHigh2":"${forecastDay3[1].substring(0, forecastDay3[1].length() - 2)}","forecastDayLow2":"${forecastDay3[2].substring(0, forecastDay3[2].length() - 2)}"
-,"forecastDay3":"${forecastDay4[0]}","forecastIcon3":"${forecastDay4Icon}","forecastDayHigh3":"${forecastDay4[1].substring(0, forecastDay4[1].length() - 2)}","forecastDayLow3":"${forecastDay4[2].substring(0, forecastDay4[2].length() - 2)}"}]}"""
+forecastNowIcon = weatherIcons[forcastDevice.currentValue("currentCondition").toString()] ?:"na"
+forecastDay1Icon = weatherIcons[forcastDevice.currentValue("forcastDay1Condition").toString()] ?:"na"
+forecastDay2Icon = weatherIcons[forcastDevice.currentValue("forcastDay2Condition").toString()] ?:"na"
+forecastDay3Icon = weatherIcons[forcastDevice.currentValue("forcastDay3Condition").toString()] ?:"na"
+forecastDay4Icon = weatherIcons[forcastDevice.currentValue("forcastDay4Condition").toString()] ?:"na"
+
+"""{"data": [{"icon":"${forecastNowIcon}","cond":"${forcastDevice.currentValue("currentCondition")}","temp1":"${Math.round(insideTemp.currentValue("temperature"))}","temp2":"${Math.round(outsideTemp.currentValue("temperature"))}"
+,"humid1":"${humid1?:"na"}","humid2":"${humid2?:"na"}"
+,"forcastDay1Day":"${forcastDevice.currentValue("forcastDay1Day")}","forecastDay1Icon":"${forecastDay1Icon}","forcastDay1High":"${forcastDevice.currentValue("forcastDay1High")}","forcastDay1Low":"${forcastDevice.currentValue("forcastDay1Low")}"
+,"forcastDay2Day":"${forcastDevice.currentValue("forcastDay2Day")}","forecastDay2Icon":"${forecastDay2Icon}","forcastDay2High":"${forcastDevice.currentValue("forcastDay2High")}","forcastDay2Low":"${forcastDevice.currentValue("forcastDay2Low")}"
+,"forcastDay3Day":"${forcastDevice.currentValue("forcastDay3Day")}","forecastDay3Icon":"${forecastDay3Icon}","forcastDay3High":"${forcastDevice.currentValue("forcastDay3High")}","forcastDay3Low":"${forcastDevice.currentValue("forcastDay3Low")}"
+,"forcastDay4Day":"${forcastDevice.currentValue("forcastDay4Day")}","forecastDay4Icon":"${forecastDay4Icon}","forcastDay4High":"${forcastDevice.currentValue("forcastDay4High")}","forcastDay4Low":"${forcastDevice.currentValue("forcastDay4Low")}"}]}"""
 }
 
 private def generateURL(data) {    
@@ -462,8 +470,27 @@ private def generateURL(data) {
 return "$url"
 }
 
+private def deviceUID() {
+    def UIDpre = state.accessToken.split('-')
+    UID = [UIDpre[3],UIDpre[4]].join()
+    return UID
+}
+
+private createChildDevice() {
+    if (!getChildDevice(deviceUID())){
+        addChildDevice("sidjohn1", "Weather Panel For Apple Shortcuts Local Device", deviceUID(), ["name": "Weather Panel ${deviceUID()}", "label": "Weather Panel For Apple Shortcuts", isComponent: true])
+        log.debug "Creating device ${deviceUID()}"
+        }
+}
+
+private removeChildDevices(devices) {
+	devices.each {
+		deleteChildDevice(it.deviceNetworkId) // 'it' is default
+	}
+}
+
 private def textVersion() {
-    def text = "Version 1.1"
+    def text = "Version 1.2"
 }
 
 private def textCopyright() {
