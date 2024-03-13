@@ -1,7 +1,7 @@
 /**
  *  Weather Panel for Apple Shortcuts
  *
- *  Copyright 2021 Sidney Johnson
+ *  Copyright 2024 Sidney Johnson
  *  If you like this code, please support the developer via PayPal: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XKDRYZ3RUNR9Y
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -12,6 +12,11 @@
  *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
  *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
  *  for the specific language governing permissions and limitations under the License.
+ *
+ *  Weather Panel For Apple Shortcuts Local App
+ *
+ *  Author: Sidney Johnson
+ *  Date: 2024-03-18
  *
  *	Version: 1.0 - Apple Weather via shortcuts, converted day/night detection to hub sunrise/sunset
  *	Version: 1.1 - Added humidity
