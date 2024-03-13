@@ -1,1 +1,79 @@
-
+{
+  "packageName": "Weather Panel For Apple Shortcuts",
+  "author": "sidjohn1",
+  "version": "1.0",
+  "minimumHEVersion": "2.1.9",
+  "dateReleased": "2024-03-18",
+  "drivers": [
+    {
+      "id": "c50b0dc1-e0db-4a7a-bce8-6cdf30524a9b",
+      "name": "Weather Panel For Apple Shortcuts Local Device",
+      "namespace": "sidjohn1",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/WeatherPanelForAppleShortcutsDTH.groovy",
+      "required": true
+    }
+  ],
+  "apps": [
+    {
+      "id": "2e72d34a-50d1-4425-9751-a35ef15a1368",
+      "name": "Weather Panel For Apple Shortcuts Local App",
+      "namespace": "sidjohn1",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/WeatherPanelForAppleShortcutsAPP.groovy",
+      "required": true,
+      "oauth": true,
+      "primary": true
+    }
+  ],
+  "files": [
+    {
+      "id": "3ca461d8-201f-47ee-a19d-97c034df6318",
+      "name": "weatherpanel.css",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.css"
+    },
+    {
+      "id": "0736844d-9447-4ec9-93d4-b8bb5ea51fe4",
+      "name": "weatherpanel.eot",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.eot"
+    },
+    {
+      "id": "a7a95c26-e198-4e74-aed0-5c18d276e141",
+      "name": "weatherpanel.js",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.js"
+    },
+    {
+      "id": "68681ebb-db0c-43ba-a79c-1449057ae817",
+      "name": "weatherpanel.json",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.json"
+    },
+    {
+      "id": "8fcc46ad-12ae-49d1-bd38-a7769fbc92d2",
+      "name": "weatherpanel.otf",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.otf"
+    },
+    {
+      "id": "fc97f929-e424-4d43-a8da-49ffc536c7db",
+      "name": "weatherpanel.png",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.png"
+    },
+    {
+      "id": "3b8cc9da-b46f-4aaa-881a-a010e2279175",
+      "name": "weatherpanel.svg",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.svg"
+    },
+    {
+      "id": "3b8cc9da-b46f-4aaa-881a-a010e2279175",
+      "name": "weatherpanel.ttf",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.ttf"
+    },
+    {
+      "id": "3b8cc9da-b46f-4aaa-881a-a010e2279175",
+      "name": "weatherpanel.woff",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.woff"
+    },
+    {
+      "id": "3b8cc9da-b46f-4aaa-881a-a010e2279175",
+      "name": "weatherpanel.woff2",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.woff2"
+    }
+  ]
+}
