@@ -94,6 +94,7 @@ mappings {
 }
 
 def installed() {
+	createChildDevice()
 	log.debug "Installed with settings: ${settings}"
 	initialize()
 }
@@ -108,7 +109,6 @@ def updated() {
 def initialize() {
 	log.info "Weather Panel ${textVersion()} ${textCopyright()}"
 	generateURL()
-        createChildDevice()
 }
 
 def uninstalled() {
