@@ -108,9 +108,7 @@ def updated() {
 def initialize() {
 	log.info "Weather Panel ${textVersion()} ${textCopyright()}"
 	generateURL()
-    if (settings.showForcast){
         createChildDevice()
-    }
 }
 
 def uninstalled() {
