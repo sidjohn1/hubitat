@@ -28,52 +28,52 @@
     {
       "id": "3ca461d8-201f-47ee-a19d-97c034df6318",
       "name": "weatherpanel.css",
-      "location": "https://github.com/sidjohn1/hubitat/raw/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.css"
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.css"
     },
     {
       "id": "0736844d-9447-4ec9-93d4-b8bb5ea51fe4",
       "name": "weatherpanel.eot",
-      "location": "https://github.com/sidjohn1/hubitat/raw/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.eot"
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.eot"
     },
     {
       "id": "a7a95c26-e198-4e74-aed0-5c18d276e141",
       "name": "weatherpanel.js",
-      "location": "https://github.com/sidjohn1/hubitat/raw/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.js"
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.js"
     },
     {
       "id": "68681ebb-db0c-43ba-a79c-1449057ae817",
       "name": "weatherpanel.json",
-      "location": "https://github.com/sidjohn1/hubitat/raw/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.json"
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.json"
     },
     {
       "id": "8fcc46ad-12ae-49d1-bd38-a7769fbc92d2",
       "name": "weatherpanel.otf",
-      "location": "https://github.com/sidjohn1/hubitat/raw/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.otf"
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.otf"
     },
     {
       "id": "fc97f929-e424-4d43-a8da-49ffc536c7db",
       "name": "weatherpanel.png",
-      "location": "https://github.com/sidjohn1/hubitat/raw/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.png"
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.png"
     },
     {
       "id": "3b8cc9da-b46f-4aaa-881a-a010e2279175",
       "name": "weatherpanel.svg",
-      "location": "https://github.com/sidjohn1/hubitat/raw/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.svg"
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.svg"
     },
     {
       "id": "fd99687a-1e88-4150-88af-5682b282adef",
       "name": "weatherpanel.ttf",
-      "location": "https://github.com/sidjohn1/hubitat/raw/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.ttf"
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.ttf"
     },
     {
       "id": "da849e76-4fdd-4347-846d-bfb24cba3d51",
       "name": "weatherpanel.woff",
-      "location": "https://github.com/sidjohn1/hubitat/raw/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.woff"
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.woff"
     },
     {
       "id": "07f6eebc-5358-4971-8d38-7b89448c5f6c",
       "name": "weatherpanel.woff2",
-      "location": "https://github.com/sidjohn1/hubitat/raw/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.woff2"
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.woff2"
       
     }
   ]
