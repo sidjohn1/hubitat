@@ -81,7 +81,7 @@ def viewURL() {
 	return dynamicPage(name: "viewURL", title: "${title ?: location.name} Weather Pannel URL", install:false) {
 		section() {
             paragraph "Copy the URL below to the URL textbox in shortcuts"
-			input "weatherUrl", "text", title: "URL",defaultValue: "${generateURL("update")}", required:false
+			input "shortcutUrl", "text", title: "URL",defaultValue: "${generateURL("update")}", required:false
 			paragraph "Copy the URL below to any modern browser to view your ${title ?: location.name}s' Weather Panel. Add a shortcut to home screen of your mobile device to run as a native app."
 			input "weatherUrl", "text", title: "URL",defaultValue: "${generateURL("html")}", required:false
 			href url:"${generateURL("html")}", style:"embedded", required:false, title:"View", description:"Tap to view, then click \"Done\""
