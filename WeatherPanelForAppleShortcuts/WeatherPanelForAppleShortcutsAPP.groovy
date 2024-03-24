@@ -21,6 +21,7 @@
  *	Version: 1.0 - Apple Weather via shortcuts, converted day/night detection to hub sunrise/sunset
  *	Version: 1.1 - Added humidity
  *	Version: 1.2 - Added child device, and code refactor
+ *	Version: 1.3 - Added noscript, font loading tweaks
  *
  */
 
@@ -66,7 +67,6 @@ def selectDevices() {
 		section(hideable: true, hidden: true, "Optional Settings") {
             input "fontColor", "enum", title:"Select Font Color", required: false, multiple:false, defaultValue: "White", options: [3: 'Black',2: 'Ivory', 1:'White']
 			input "fontSize", "enum", title:"Select Font Size", required: false, multiple:false, defaultValue: "Medium", options: [4: 'xSmall',3: 'Small',2: 'Medium', 1:'Large']
-            input "localResources", "bool", title: "Use Local Resources?", required: false, defaultValue: false
 		}
 		section("Wallpaper URL") {
 			input "wallpaperUrl", "text", title: "Wallpaper URL",defaultValue: "http://", required:false
@@ -81,7 +81,7 @@ def viewURL() {
 	return dynamicPage(name: "viewURL", title: "${title ?: location.name} Weather Pannel URL", install:false) {
 		section() {
             paragraph "Copy the URL below to the URL textbox in shortcuts"
-			input "shortcutUrl", "text", title: "URL",defaultValue: "${generateURL("update")}", required:false
+			input "updateUrl", "text", title: "URL",defaultValue: "${generateURL("update")}", required:false
 			paragraph "Copy the URL below to any modern browser to view your ${title ?: location.name}s' Weather Panel. Add a shortcut to home screen of your mobile device to run as a native app."
 			input "weatherUrl", "text", title: "URL",defaultValue: "${generateURL("html")}", required:false
 			href url:"${generateURL("html")}", style:"embedded", required:false, title:"View", description:"Tap to view, then click \"Done\""
@@ -227,6 +227,12 @@ if (showForcast == true) {
 	    		content += '<div id="temp2" class="text1"><p>' + item.temp2 + '°<b>${getTemperatureScale()}<br>Outside</b></p></div>';
     			content += '<div id="cond" class="text1"><p>' + item.cond + '&nbsp;</p></div>';"""
 }
+if (wallpaperUrl == "http://") {
+    preconnectContent = ""
+}
+else {
+    preconnectContent = """<link rel="preconnect" href="${wallpaperUrl}" crossorigin />"""
+}
 
 """<!-- Meta Data -->
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -369,7 +375,10 @@ u{
     padding-right: 5%;
 }
 </style>
-<link type="text/css" rel="stylesheet" href="/local/weatherpanel.css"/>
+<!-- external resources -->
+${preconnectContent}
+<link as="style" rel="preload" href="/local/weatherpanel.css"/>
+<link type="text/css" rel="stylesheet" media="print" onload="this.media='all'" href="/local/weatherpanel.css"/>
 <link rel="shortcut icon" type="image/png" href="/local/weatherpanel.png"/>
 <link rel="manifest" href="/local/weatherpanel.json">
     <!-- Page Title -->
@@ -418,6 +427,10 @@ ${weatherDataContent}
 	weatherData();
 });
 </script>
+<noscript>
+<font color="green"><h1>&nbsp;Java Script is required</h1></font>
+<link type="text/css" rel="stylesheet" href="/local/weatherpanel.css"/>
+</noscript>
 """
 }
 
@@ -494,7 +507,7 @@ private removeChildDevices(devices) {
 }
 
 private def textVersion() {
-    def text = "Version 1.2"
+    def text = "Version 1.3"
 }
 
 private def textCopyright() {
