@@ -13,9 +13,10 @@
 *
 *  Author: Sidney Johnson
 *
-*  Date: 2024-01-08
+*  Date: 2024-04-28
 *
 *	1.0 - Initial Release
+*	1.1 - Corrected preasure reporting to mBar 
 *
 */
 import java.math.BigDecimal
@@ -90,7 +91,7 @@ def poll() {
 				sendEvent(name: "temperature", value: resp?.data?.current_temp_f, unit: '°F')
 				sendEvent(name: 'humidity', value: resp?.data?.current_humidity, unit: '%')
 				sendEvent(name: 'dewPoint', value: resp?.data?.current_dewpoint_f, unit: '°F')
-              			sendEvent(name: 'pressure', value: resp?.data?.pressure, unit: 'inHg')
+              			sendEvent(name: 'pressure', value: resp?.data?.pressure, unit: 'mBar')
 
 				if (resp?.data?."pm2.5_aqi" != null && resp?.data?."pm2.5_aqi_b" != null) {
                   			aqi = ((resp?.data?."pm2.5_aqi".toBigDecimal() + resp?.data?."pm2.5_aqi_b".toBigDecimal()) / 2.0 ).toBigDecimal().setScale(2, BigDecimal.ROUND_HALF_UP)
