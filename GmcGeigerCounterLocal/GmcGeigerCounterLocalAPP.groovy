@@ -16,17 +16,18 @@
 *  Date: 2024-02-18
 *
 *	1.0 - Initial Release
+*	1.1 - Added CPM_Display
 *
 */
 
 definition(
-        name: "GMC Geiger Counter Local App",
+    name: "GMC Geiger Counter Local App",
 	description: "GMC Geiger Counter Local",
-        namespace: "sidjohn1",
-        author: "sidjohn1",
-        oauth: true,
+    namespace: "sidjohn1",
+    author: "sidjohn1",
+    oauth: true,
 	iconUrl: "",
-    	iconX2Url: "",
+    iconX2Url: "",
 	importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalAPP.groovy"){
 }
 
@@ -43,21 +44,21 @@ def setupScreen(){
     //+ "/?access_token=${state.accessToken}"
     return dynamicPage(name: "setupScreen", uninstall: true, install: true){
     section("Settings:") {
-		input name: "gmcUpload", type: "bool", title: "Automatically Submit to gmcmaps.com", defaultValue: true
-        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: true
+		input name: "gmcUpload", type: "bool", title: "Automatically Submit to gmcmaps.com", defaultValue: false
+        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: false
         }
         section("NGINX Config:"){ 
             paragraph("""server {
             listen       80;     
                 location /gmc {
-                set &#36;token \"\";
-                if (&#36;is_args) {
-                    set &#36;token \"&\";
-                }
-                set &#36;args \"&#36;{args}&#36;{token}access_token=${state.accessToken}\";
-                proxy_read_timeout 10s;
-                proxy_pass ${uri}/;
-                proxy_redirect default;
+                    set &#36;token \"\";
+                    if (&#36;is_args) {
+                        set &#36;token \"&\";
+                    }
+                    set &#36;args \"&#36;{args}&#36;{token}access_token=${state.accessToken}\";
+                    proxy_read_timeout 10s;
+                    proxy_pass ${uri}/;
+                    proxy_redirect default;
             }
         }""")
         }
@@ -67,6 +68,7 @@ def setupScreen(){
 def updated() {
 	log.warn "debug logging is: ${logEnable == true}"
 	if (logEnable) runIn(1800, logsOff)
+    if (!logEnable) unschedule(logsOff)
 }
 
 def uninstalled() {
@@ -79,7 +81,7 @@ mappings {
 }
 
 def renderWebsite(){
-    if (logEnable)log.debug "Rendering page: params = ${params}"
+    if (logEnable)log.debug "Recieved metrics: ${params}"
     
     if (params?.GID){
         if (!getChildDevice(params?.GID)){
@@ -93,6 +95,27 @@ def renderWebsite(){
         else {
             def dev = getChildDevice(params?.GID)
             dev.sendEvent(name: "CPM", value: "${params?.CPM}")
+            if 	(params?.CPM.toInteger() < 51)  {
+                dev.sendEvent(name: 'CPM_Display', value: "${params?.CPM} - NORMAL")
+                dev.sendEvent(name: 'CPM_Message', value: "Normal Levels. No action needed.")
+            }
+            else if (params?.CPM.toInteger() < 100) {
+                dev.sendEvent(name: 'CPM_Display', value: "${params?.CPM} - MEDIUM")
+                dev.sendEvent(name: 'CPM_Message', value: "Medium Levels. Monitor regularly.")
+            }
+            else if (params?.CPM.toInteger() < 1000) {
+                dev.sendEvent(name: 'CPM_Display', value: "${params?.CPM} - HIGH")
+                dev.sendEvent(name: 'CPM_Message', value: "High Levels. Investigate Sourse.")
+            }
+            else if (params?.CPM.toInteger() < 2000) {
+                dev.sendEvent(name: 'CPM_Display', value: "${params?.CPM} - VERY HIGH")
+                dev.sendEvent(name: 'CPM_Message', value: "Very High Levels. Leave Area.")
+            }
+            else {
+                dev.sendEvent(name: 'CPM_Display', value: "${params?.CPM} - EXTREMELY HIGH")
+                dev.sendEvent(name: 'CPM_Message', value: "Extremely High Levels. Exacuate Immediately!")
+            }
+            
 	        dev.sendEvent(name: "ACPM", value: "${params?.ACPM}")	
 	        dev.sendEvent(name: "uSV", value: "${params?.uSV}")
             dev.sendEvent(name: 'timestamp', value: now())
@@ -101,10 +124,10 @@ def renderWebsite(){
             def url = "http://www.GMCmap.com/log2.asp?AID=${params?.AID}&GID=${params?.GID}&CPM=${params?.CPM}"
             if (params?.ACPM)url +="&ACPM=${params?.ACPM}"
             if (params?.uSV)url +="&uSV=${params?.uSV}"
-            if (logEnable)log.debug "gmcmaps.com payload ${url}"
+            if (logEnable)log.debug "gmcmaps.com payload: ${url}"
             try {
                 httpGet(url) { resp ->
-                    if (logEnable) log.debug resp.getData()
+                    if (logEnable) log.debug "gmcmaps.com responce: ${resp?.data}"
                     if (resp && (resp.status == 200)) {
                         def dev = getChildDevice(params?.GID)
                         dev.sendEvent(name: "upload", value: "${resp?.data}")
