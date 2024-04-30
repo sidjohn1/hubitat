@@ -1,9 +1,9 @@
 {
   "packageName": "GMC Geiger Counter Local",
   "author": "sidjohn1",
-  "version": "1.0",
+  "version": "1.1",
   "minimumHEVersion": "2.1.9",
-  "dateReleased": "2024-02-18",
+  "dateReleased": "2024-04-29",
   "documentationLink": "https://github.com/sidjohn1/hubitat/blob/main/GmcGeigerCounterLocal/README.md",
   "communityLink": "https://community.hubitat.com/t/release-gmc-geiger-counter-local/",
   "drivers": [
