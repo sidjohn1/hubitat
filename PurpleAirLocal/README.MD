@@ -1,5 +1,5 @@
 <h1>PurpleAir Local Driver</h1>
-PurpleAir Local Driver pulls Temperature, Humidity, Pressure, Dew Point, AQI*, RSSI as well as PM1.0*, PM2.5* and PM10* particle reading directly from the device, no internet connection or cloud needed.
+PurpleAir Local Driver pulls Temperature, Humidity, Pressure, Dew Point, AQI*, RSSI as well as PM1.0*, PM2.5*, PM10* and VOC particle reading directly from the device, no internet connection or cloud needed.
 It has been tested on a BME280 (Classic)and should work for other single and dual laser models.<br>
 <b>* Devices with dual lasers values will be averaged</b>
 <br>
