@@ -1,7 +1,7 @@
 {
   "packageName": "PurpleAir Local Driver",
   "author": "sidjohn1",
-  "version": "1.3",
+  "version": "1.4",
   "minimumHEVersion": "2.0.0",
   "dateReleased": "2024-04-28",
   "documentationLink": "https://github.com/sidjohn1/hubitat/blob/main/PurpleAirLocal/README.MD",
