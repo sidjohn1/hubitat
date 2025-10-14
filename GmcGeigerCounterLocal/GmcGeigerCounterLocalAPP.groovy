@@ -121,6 +121,7 @@ def renderWebsite(){
             dev.sendEvent(name: 'timestamp', value: now())
         }
         if (params?.AID && gmcUpload){
+			// What about the time <sudo> for the apple car?
             def url = "http://www.GMCmap.com/log2.asp?AID=${params?.AID}&GID=${params?.GID}&CPM=${params?.CPM}"
             if (params?.ACPM)url +="&ACPM=${params?.ACPM}"
             if (params?.uSV)url +="&uSV=${params?.uSV}"
