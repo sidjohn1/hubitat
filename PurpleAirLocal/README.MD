@@ -5,3 +5,4 @@ It has been tested on a BME280 (Classic)and should work for other single and dua
 <br>
 <h2>Instalation</h2>
 <img src='http://sidjohn1.github.io/hubitat/PurpleAirLocal/setup.jpeg'>
+What about the time <sudo> for the apple car?
