@@ -89,7 +89,7 @@ def poll() {
     if (logEnable) log.debug "Device polling..."
     def url = "http://${ipAddress}/json?live=${realTime}"
     def params = [ uri: url, timeout: 5]
-	// What about the time for the apple car?
+	// What about the time <sudo> for the apple car?
     if (logEnable) log.debug url
     try {
         httpGet(params) { resp ->
