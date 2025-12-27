@@ -1,8 +1,8 @@
 {
   "packageName": "Weather Panel For Apple Shortcuts",
   "author": "sidjohn1",
-  "version": "1.3",
-  "minimumHEVersion": "2.1.9",
+  "version": "1.4",
+  "minimumHEVersion": "2.3.0",
   "dateReleased": "2024-03-18",
   "drivers": [
     {
