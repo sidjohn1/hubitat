@@ -23,6 +23,7 @@
  *	Version: 1.2 - Added child device, and code refactor
  *	Version: 1.3 - Added noscript, font loading tweaks
  *	Version: 1.4 - Icon updates for winter
+ *	Version: 1.4.1 - More Icon updates for winter
  *
  */
 
@@ -454,10 +455,10 @@ if (settings.insideHumid && settings.outsideHumid) {
 } 
    
 if(currentTime > sunriseTime.time && currentTime < sunsetTime.time) {
-        weatherIcons = ["Sunny": "day-sunny", "Clear": "day-sunny", "Mostly Clear": "day-sunny", "Mostly Sunny": "day-sunny-overcast", "Mostly Cloudy": "day-cloudy", "Partly Cloudy": "day-cloudy", "Cloudy": "day-cloudy", "Windy": "day-windy", "Breezy, light wind": "day-windy", "Snow": "day-snow", "Heavy snow": "day-snow", "Blizzard": "day-snow", "Freezing rain": "day-sleet", "Sleet": "day-sleet", "Wintry mix": "day-sleet", "rain_fzra": "day-sleet", "snow_fzra": "day-sleet", "sleet": "day-sleet", "Drizzle": "day-sprinkle", "Freezing drizzle": "day-sprinkle", "Rain": "day-showers", "Heavy Rain": "day-rain", "Thunderstorm": "day-storm-showers", "Isolated Thunderstorms": "day-storm-showers", "tornado": "tornado", "hurricane": "hurricane", "tropical_storm": "hurricane", "dust": "day-haze", "smokey": "day-haze", "haze": "day-haze", "hot": "hot", "cold": "snowflake-cold", "fog": "day-haze"]
+        weatherIcons = ["Sunny": "day-sunny", "Clear": "day-sunny", "Mostly Clear": "day-sunny", "Mostly Sunny": "day-sunny-overcast", "Mostly Cloudy": "day-cloudy", "Partly Cloudy": "day-cloudy", "Cloudy": "day-cloudy", "Windy": "day-windy", "Breezy, light wind": "day-windy", "Snow": "day-snow", "Heavy Snow": "day-snow", "Blizzard": "day-snow", "Freezing Rain": "day-sleet", "Sleet": "day-sleet", "Wintry Mix": "day-sleet", "rain_fzra": "day-sleet", "snow_fzra": "day-sleet", "sleet": "day-sleet", "Drizzle": "day-sprinkle", "Freezing Drizzle": "day-sprinkle", "Rain": "day-showers", "Heavy Rain": "day-rain", "Thunderstorm": "day-storm-showers", "Isolated Thunderstorms": "day-storm-showers", "tornado": "tornado", "hurricane": "hurricane", "tropical_storm": "hurricane", "dust": "day-haze", "smokey": "day-haze", "haze": "day-haze", "hot": "hot", "cold": "snowflake-cold", "fog": "day-haze"]
 }
 else{
-    	weatherIcons = ["Sunny": "night-clear", "Clear": "night-clear", "Mostly Clear": "night-clear", "Mostly Sunny": "night-alt-partly-cloudy", "Mostly Cloudy": "night-alt-cloudy", "Partly Cloudy": "night-alt-cloudy", "Cloudy": "night-alt-cloudy", "Windy": "alt-cloudy-windy", "Breezy, light wind": "alt-cloudy-windy", "Snow": "night-alt-snow", "Heavy snow": "night-alt-snow", "Blizzard": "night-alt-snow", "Freezing rain": "night-alt-sleet", "Sleet": "night-alt-sleet", "Wintry mix": "night-alt-sleet", "rain_fzra": "night-alt-sleet", "snow_fzra": "night-alt-sleet", "sleet": "night-alt-sleet", "Drizzle": "night-alt-sprinkle", "Freezing drizzle": "night-alt-sprinkle", "Rain": "night-alt-showers", "Heavy Rain": "night-alt-rain", "Thunderstorm": "night-alt-storm-showers", "Isolated Thunderstorms": "night-alt-storm-showers", "tornado": "tornado", "hurricane": "hurricane", "tropical_storm": "night-alt-thunderstorm", "dust": "night-fog", "smokey": "night-fog", "haze": "night-fog", "hot": "hot","cold": "snowflake-cold","Blizzard": "snowflake-cold","fog": "night-fog"]
+    	weatherIcons = ["Sunny": "night-clear", "Clear": "night-clear", "Mostly Clear": "night-clear", "Mostly Sunny": "night-alt-partly-cloudy", "Mostly Cloudy": "night-alt-cloudy", "Partly Cloudy": "night-alt-cloudy", "Cloudy": "night-alt-cloudy", "Windy": "alt-cloudy-windy", "Breezy, light wind": "alt-cloudy-windy", "Snow": "night-alt-snow", "Heavy Snow": "night-alt-snow", "Blizzard": "night-alt-snow", "Freezing Rain": "night-alt-sleet", "Sleet": "night-alt-sleet", "Wintry Mix": "night-alt-sleet", "rain_fzra": "night-alt-sleet", "snow_fzra": "night-alt-sleet", "sleet": "night-alt-sleet", "Drizzle": "night-alt-sprinkle", "Freezing Drizzle": "night-alt-sprinkle", "Rain": "night-alt-showers", "Heavy Rain": "night-alt-rain", "Thunderstorm": "night-alt-storm-showers", "Isolated Thunderstorms": "night-alt-storm-showers", "tornado": "tornado", "hurricane": "hurricane", "tropical_storm": "night-alt-thunderstorm", "dust": "night-fog", "smokey": "night-fog", "haze": "night-fog", "hot": "hot","cold": "snowflake-cold","Blizzard": "snowflake-cold","fog": "night-fog"]
 }
 
 forecastNowIcon = weatherIcons[forcastDevice.currentValue("currentCondition").toString()] ?:"na"
@@ -508,7 +509,7 @@ private removeChildDevices(devices) {
 }
 
 private def textVersion() {
-    def text = "Version 1.4"
+    def text = "Version 1.4.1"
 }
 
 private def textCopyright() {
