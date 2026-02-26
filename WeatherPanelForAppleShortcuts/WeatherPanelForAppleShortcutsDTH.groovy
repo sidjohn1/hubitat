@@ -18,6 +18,7 @@
 *  Date: 2024-03-18
 *
 *	1.0 - Initial Release
+*	1.1 - Added "Feels Like" for current temperature
 *
 */
 
@@ -52,6 +53,7 @@ metadata {
         attribute "forcastDay4High", "number"        // upload responce from gmcmap.com
         attribute "forcastDay4Low", "number"         // upload responce from gmcmap.com
         attribute "forcastDay4Condition", "string"   // upload responce from gmcmap.com
+        attribute "temperatureFeelsLike", "number"   // Last update
         attribute "timestamp", "number"              // Last update
 	}
 }
