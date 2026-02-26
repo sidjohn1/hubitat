@@ -64,7 +64,7 @@
       "id": "fd99687a-1e88-4150-88af-5682b282adef",
       "name": "weatherpanel.ttf",
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/WeatherPanelForAppleShortcuts/Assets/weatherpanel.ttf",
-      "tranferType": "binary"
+      "tanferType": "binary"
     },
     {
       "id": "da849e76-4fdd-4347-846d-bfb24cba3d51",
