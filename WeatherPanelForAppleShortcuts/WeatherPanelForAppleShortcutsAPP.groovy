@@ -24,6 +24,7 @@
  *	Version: 1.3 - Added noscript, font loading tweaks
  *	Version: 1.4 - Icon updates for winter
  *	Version: 1.4.1 - More Icon updates for winter
+ *	Version: 1.4.2 - Added Rain Forcast as a possibility, requires a dedicated always on mac vm or ios device for screen scrapping the rain forcast
  *
  */
 
@@ -509,7 +510,7 @@ private removeChildDevices(devices) {
 }
 
 private def textVersion() {
-    def text = "Version 1.4.1"
+    def text = "Version 1.4.2"
 }
 
 private def textCopyright() {
