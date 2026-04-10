@@ -19,6 +19,7 @@
 *
 *	1.0 - Initial Release
 *	1.1 - Added "Feels Like" for current temperature
+*	1.2 - Added Rain Forcast as a possibility, requires a dedicated always on mac vm or ios device for screen scrapping the rain forcast
 *
 */
 
@@ -34,26 +35,28 @@ metadata {
         capability "Sensor"
         capability "TemperatureMeasurement"
         
-		attribute "currentCondition", "string"       // Average Count Per Minute reading from this Geiger Counter
-		attribute "currentPrecipAmount", "number"    // uSv/h reading from this Geiger Counter
-        attribute "currentPrecipChance", "number"    // upload responce from gmcmap.com
-        attribute "forcastDay1Day", "string"         // upload responce from gmcmap.com
-        attribute "forcastDay1High", "number"        // upload responce from gmcmap.com
-        attribute "forcastDay1Low", "number"         // upload responce from gmcmap.com
-        attribute "forcastDay1Condition", "string"   // upload responce from gmcmap.com
-        attribute "forcastDay2Day", "string"         // upload responce from gmcmap.com
-        attribute "forcastDay2High", "number"        // upload responce from gmcmap.com
-        attribute "forcastDay2Low", "number"         // upload responce from gmcmap.com
-        attribute "forcastDay2Condition", "string"   // upload responce from gmcmap.com
-        attribute "forcastDay3Day", "string"         // upload responce from gmcmap.com
-        attribute "forcastDay3High", "number"        // upload responce from gmcmap.com
-        attribute "forcastDay3Low", "number"         // upload responce from gmcmap.com
-        attribute "forcastDay3Condition", "string"   // upload responce from gmcmap.com
-        attribute "forcastDay4Day", "string"         // upload responce from gmcmap.com
-        attribute "forcastDay4High", "number"        // upload responce from gmcmap.com
-        attribute "forcastDay4Low", "number"         // upload responce from gmcmap.com
-        attribute "forcastDay4Condition", "string"   // upload responce from gmcmap.com
-        attribute "temperatureFeelsLike", "number"   // Last update
+		attribute "currentCondition", "string"       // Current Weather Conditions
+		attribute "currentPrecipAmount", "number"    // Current Precipitation Amount
+        attribute "currentPrecipChance", "number"    // Current Precipitation Chance
+        attribute "currentRainForcast", "string"     // Current Rain Forcast - not collected by default
+        attribute "currentRainETA", "string"	     // Current Rain ETA - not collected by default
+        attribute "forcastDay1Day", "string"         // Todays Day
+        attribute "forcastDay1High", "number"        // Todays High Temp
+        attribute "forcastDay1Low", "number"         // Todays Low Temp
+        attribute "forcastDay1Condition", "string"   // Todays Condition
+        attribute "forcastDay2Day", "string"         // Tomorrows Day
+        attribute "forcastDay2High", "number"        // Tomorrows High Temp
+        attribute "forcastDay2Low", "number"         // Tomorrows Low Temp
+        attribute "forcastDay2Condition", "string"   // Tomorrows Condition
+        attribute "forcastDay3Day", "string"         // Day After Tomorrows Day
+        attribute "forcastDay3High", "number"        // Day After Tomorrows High Temp
+        attribute "forcastDay3Low", "number"         // Day After Tomorrows Low Temp
+        attribute "forcastDay3Condition", "string"   // Day After Tomorrows Condition
+        attribute "forcastDay4Day", "string"         // Day After The Day After Tomorrows Day
+        attribute "forcastDay4High", "number"        // Day After The Day After High Temp
+        attribute "forcastDay4Low", "number"         // Day After The Day After Low Temp
+        attribute "forcastDay4Condition", "string"   // Day After The Day After Condition
+        attribute "temperatureFeelsLike", "number"   // Current "Feels Like" Temp
         attribute "timestamp", "number"              // Last update
 	}
 }
