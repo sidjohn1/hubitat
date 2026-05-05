@@ -17,12 +17,14 @@
 *
 *	1.0 - Initial Release
 *	1.1 - Added CPM_Display
+*	1.2 - Added Integrations menu definition
 *
 */
 
 definition(
     name: "GMC Geiger Counter Local App",
-	description: "GMC Geiger Counter Local",
+	description: "GMC Geiger Counter Local Integration",
+	menu: "Integrations"
     namespace: "sidjohn1",
     author: "sidjohn1",
     oauth: true,
