@@ -25,6 +25,7 @@
  *	Version: 1.4 - Icon updates for winter
  *	Version: 1.4.1 - More Icon updates for winter
  *	Version: 1.4.2 - Added Rain Forcast as a possibility, requires a dedicated always on mac vm or ios device for screen scrapping the rain forcast
+ *	Version: 2026.5 - Added configurable debug logging and Added Integrations menu definition
  *
  */
 
@@ -32,7 +33,8 @@ definition(
     name: "Weather Panel For Apple Shortcuts Local App",
     namespace: "sidjohn1",
     author: "Sidney Johnson",
-    description: "Weather Panel For Apple Shortcuts",
+    description: "Weather Panel For Apple Shortcuts Integration",
+    menu: "Integrations",
     category: "Convenience",
     iconUrl: "",
     iconX2Url: "",
@@ -46,8 +48,8 @@ preferences {
 
 def selectDevices() {
     if(!state.accessToken){	
-        //enable OAuth in the app settings or this call will fail
-        createAccessToken()
+    //enable OAuth in the app settings or this call will fail
+    createAccessToken()
 	//create weather device or save will fail
 	createChildDevice()
     }
@@ -70,6 +72,7 @@ def selectDevices() {
 		section(hideable: true, hidden: true, "Optional Settings") {
             input "fontColor", "enum", title:"Select Font Color", required: false, multiple:false, defaultValue: "White", options: [3: 'Black',2: 'Ivory', 1:'White']
 			input "fontSize", "enum", title:"Select Font Size", required: false, multiple:false, defaultValue: "Medium", options: [4: 'xSmall',3: 'Small',2: 'Medium', 1:'Large']
+            input "logEnable", "bool", title: "Enable debug logging", defaultValue: true
 		}
 		section("Wallpaper URL") {
 			input "wallpaperUrl", "text", title: "Wallpaper URL",defaultValue: "http://", required:false
@@ -83,7 +86,7 @@ def selectDevices() {
 def viewURL() {
 	return dynamicPage(name: "viewURL", title: "${title ?: location.name} Weather Pannel URL", install:false) {
 		section() {
-            paragraph "Copy the URL below to the URL textbox in shortcuts"
+            paragraph "Copy the URL below to the huburl value in hubitatWeatherForcast and hubitatWeatherCurrent shortcuts"
 			input "updateUrl", "text", title: "URL",defaultValue: "${generateURL("update")}", required:false
 			paragraph "Copy the URL below to any modern browser to view your ${title ?: location.name}s' Weather Panel. Add a shortcut to home screen of your mobile device to run as a native app."
 			input "weatherUrl", "text", title: "URL",defaultValue: "${generateURL("html")}", required:false
@@ -99,12 +102,12 @@ mappings {
 }
 
 def installed() {
-	log.debug "Installed with settings: ${settings}"
+	if (logEnable) log.debug "Installed with settings: ${settings}"
 	initialize()
 }
 
 def updated() {
-	log.debug "Updated with settings: ${settings}"
+	if (logEnable) log.debug "Updated with settings: ${settings}"
 	unschedule()
 	unsubscribe()
 	initialize()
@@ -112,6 +115,8 @@ def updated() {
 
 def initialize() {
 	log.info "Weather Panel ${textVersion()} ${textCopyright()}"
+    log.warn "debug logging is: ${logEnable}"
+    if (logEnable) runIn(1800, logsOff)
 	generateURL()
 }
 
@@ -119,13 +124,18 @@ def uninstalled() {
 	removeChildDevices(getChildDevices())
 }
 
+def logsOff() {
+    log.warn "debug logging disabled..."
+    device.updateSetting("logEnable", [value: "false", type: "bool"])
+}
+
 def recieveUpdate() {
-    log.info "Recieved metrics"
+    if (logEnable) log.debug "Recieved metrics"
     render contentType: "text/plain", data: "OK", status: 200
     def json 
     try {
         json = parseJson(request.body).sort()
-        log.debug json
+        if (logEnable) log.debug json
         def dev = getChildDevice(deviceUID())
         json.each {
             dev.sendEvent(name: "${it.key}", value: "${it.value}")
@@ -510,7 +520,7 @@ private removeChildDevices(devices) {
 }
 
 private def textVersion() {
-    def text = "Version 1.4.2"
+    def text = "Version 2026.5"
 }
 
 private def textCopyright() {
