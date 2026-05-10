@@ -24,7 +24,7 @@
 definition(
     name: "GMC Geiger Counter Local App",
 	description: "GMC Geiger Counter Local Integration",
-	menu: "Integrations"
+	menu: "Integrations",
     namespace: "sidjohn1",
     author: "sidjohn1",
     oauth: true,
