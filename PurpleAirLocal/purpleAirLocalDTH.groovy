@@ -20,7 +20,8 @@
 *  1.2 - Added aqiDisplay, for dual laser model rounded AQI to a whole number after averaging, formatting tweaks, added temp and humidity adjustments, changed aqimessage to aqiMessage.
 *  1.3 - Added voc, vocDisplay and vocMessage. AQI Clean up.
 *  1.4 - Code clean up and refactoring.
-*  1.5 - fix for aqiDisplay null value, reduced http connection timeout to 5 seconds
+*  1.5 - fix for aqiDisplay null value, reduced http connection timeout to 10 seconds
+*  1.6 - fix for current_temp_f and current_humidity null value
 *
 */
 
@@ -88,8 +89,8 @@ def parse(String description) {
 def poll() {
     if (logEnable) log.debug "Device polling..."
     def url = "http://${ipAddress}/json?live=${realTime}"
-    def params = [ uri: url, timeout: 5]
-	// What about the time <sudo> for the apple car?
+    def params = [ uri: url, timeout: 10]
+	// What about the time for the apple car?
     if (logEnable) log.debug url
     try {
         httpGet(params) { resp ->
@@ -120,6 +121,10 @@ def processResponse(data) {
 }
 
 def calibrateTempHum(name, value, adjustment, unit, logMessage) {
+    if (value == null) {
+        if (logEnable) log.debug "${name} not present in response, skipping"
+        return
+    }
     if (adjustment) {
         def adjustedValue = (value.toInteger() + adjustment.toInteger())
         sendEvent(name: name, value: adjustedValue, unit: unit)
