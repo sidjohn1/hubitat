@@ -24,8 +24,9 @@
  *	Version: 1.3 - Added noscript, font loading tweaks
  *	Version: 1.4 - Icon updates for winter
  *	Version: 1.4.1 - More Icon updates for winter
- *	Version: 1.4.2 - Added Rain Forcast as a possibility, requires a dedicated always on mac vm or ios device for screen scrapping the rain forcast
+ *	Version: 1.4.2 - Added Rain Forcast as a possibility
  *	Version: 2026.5 - Added configurable debug logging and Added Integrations menu definition
+ *	Version: 2026.8 - Updated code for background image retrival
  *
  */
 
@@ -400,27 +401,43 @@ ${preconnectContent}
 <script type="text/javascript" charset="utf-8" src="/local/weatherpanel.js"></script>
 <script type="text/javascript">
 \$(window).load(function(){
-	var bg = '';
-	var tImage = new Image();
-	\$("#data").click(function(){
-		var path = "${wallpaperUrl}";
-		var fileList = "index.json";
+	var path = "${wallpaperUrl}";
+	var fileList = "index.json";
+	var maxAttempts = 5;
+
+	function setRandomBackground(){
 		\$.getJSON(path+fileList,function(list,status){
-			var mime = '*';
-			while (mime.search('image')){
-				obj = list[Math.floor(Math.random()*list.length)];
-				mime=obj.mime;
+			var obj = null;
+			for (var i = 0; i < maxAttempts; i++){
+				var candidate = list[Math.floor(Math.random()*list.length)];
+				if (candidate && candidate.mime && candidate.mime.indexOf('image') !== -1){
+					obj = candidate;
+					break;
+				}
 			}
-			bg = path+obj.path;
+			if (!obj){
+				console.warn('No image found after ' + maxAttempts + ' attempts; skipping background change.');
+				return;
+			}
+			var bg = path+obj.path;
 			bg = bg.replace('#','%23');
-            \$('<img src="'+bg+'"/>');
-            setTimeout(function(){
-				document.body.background = bg;
-			},3109);
+
+			var tImage = new Image();
+			tImage.onload = function(){
+				setTimeout(function(){
+					document.body.style.backgroundImage = "url('" + bg + "')";
+				},3109);
+			};
+			tImage.src = bg;
+		}).fail(function(){
+			console.error('Failed to load image list from ' + path + fileList);
 		});
-        setTimeout('\$("#data").click()', ${rTimeout});
-	});
-	\$("#data").click();
+
+		setTimeout(setRandomBackground, ${rTimeout});
+	}
+
+	\$("#data").click(setRandomBackground);
+	setRandomBackground();
 });
 </script>
 
@@ -520,7 +537,7 @@ private removeChildDevices(devices) {
 }
 
 private def textVersion() {
-    def text = "Version 2026.5"
+    def text = "Version 2026.8"
 }
 
 private def textCopyright() {
