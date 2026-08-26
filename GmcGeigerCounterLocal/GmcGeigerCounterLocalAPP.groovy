@@ -13,45 +13,58 @@
 *
 *  Author: Sidney Johnson
 *
-*  Date: 2024-04-29
+*  Date: 2026-08-25
 *
-*	1.0 - Initial Release
-*	1.1 - Added CPM_Display
-*	1.2 - Added Integrations menu definition
+*   1.0 - Initial Release
+*   1.1 - Added CPM_Display
+*   1.2 - Added Integrations menu definition
+*   1.3 - Added pCi radon support, radon status events, fixed typos,
+*         refactored duplicate device-update logic, added input validation
+*   1.4 - Added 24hr backoff for gmcmap.com uploads after receiving an HTTP 500
+*   1.5 - Fixed groovy.lang.StringWriterIOException: java.io.IOException: Stream closed error
 *
 */
 
+import groovy.transform.Field
+
 definition(
     name: "GMC Geiger Counter Local App",
-	description: "GMC Geiger Counter Local Integration",
-	menu: "Integrations",
+    description: "GMC Geiger Counter Local Integration",
+    menu: "Integrations",
     namespace: "sidjohn1",
     author: "sidjohn1",
     oauth: true,
-	iconUrl: "",
+    iconUrl: "",
     iconX2Url: "",
-	importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalAPP.groovy"){
+    importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalAPP.groovy")
+{
 }
 
-preferences(){
+// Length of time to suspend gmcmap.com uploads after a HTTP 500 response
+@Field static final long GMC_BACKOFF_MS = 24L * 60L * 60L * 1000L
+
+preferences() {
     page(name: "setupScreen")
 }
 
-def setupScreen(){
-    if(!state.accessToken){	
-        //enable OAuth in the app settings or this call will fail
-        createAccessToken()	
+def setupScreen() {
+    if (!state.accessToken) {
+        createAccessToken()
     }
     def uri = getFullLocalApiServerUrl()
-    //+ "/?access_token=${state.accessToken}"
-    return dynamicPage(name: "setupScreen", uninstall: true, install: true){
-    section("Settings:") {
-		input name: "gmcUpload", type: "bool", title: "Automatically Submit to gmcmaps.com", defaultValue: false
-        input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: false
+    return dynamicPage(name: "setupScreen", uninstall: true, install: true) {
+        section("Settings:") {
+            input name: "gmcUpload", type: "bool", title: "Automatically Submit to gmcmap.com", defaultValue: false
+            input name: "logEnable", type: "bool", title: "Enable debug logging", defaultValue: false
         }
-        section("NGINX Config:"){ 
+        section("Status:") {
+            if (state.gmcBackoffUntil && state.gmcBackoffUntil > now()) {
+                paragraph("gmcmap.com uploads are currently paused until ${new Date(state.gmcBackoffUntil)} due to a prior server error (HTTP 500).")
+            }
+        }
+        section("NGINX Config:") {
             paragraph("""server {
-            listen       80;     
+            listen       80;
                 location /gmc {
                     set &#36;token \"\";
                     if (&#36;is_args) {
@@ -68,102 +81,148 @@ def setupScreen(){
 }
 
 def updated() {
-	log.warn "debug logging is: ${logEnable == true}"
-	if (logEnable) runIn(1800, logsOff)
+    log.warn "debug logging is: ${logEnable == true}"
+    if (logEnable) runIn(1800, logsOff)
     if (!logEnable) unschedule(logsOff)
 }
 
 def uninstalled() {
-	removeChildDevices(getChildDevices())
+    removeChildDevices(getChildDevices())
 }
 
 mappings {
-    //the root path - you can also map other paths or use parameters in paths and posted data
-    path("/") { 			 action: [ GET: 	"renderWebsite" ] }
+    path("/") { action: [ GET: "renderWebsite" ] }
 }
 
-def renderWebsite(){
-    if (logEnable)log.debug "Recieved metrics: ${params}"
-    
-    if (params?.GID){
-        if (!getChildDevice(params?.GID)){
-            addChildDevice("sidjohn1", "GMC Geiger Counter Local Device", params?.GID, ["name": "Geiger Counter ${params?.GID}", "label": "Local GMC Geiger Counter", isComponent: false])
-            def dev = getChildDevice(params?.GID)
-            dev.sendEvent(name: "CPM", value: "${params?.CPM}")
-	        dev.sendEvent(name: "ACPM", value: "${params?.ACPM}")	
-	        dev.sendEvent(name: "uSV", value: "${params?.uSV}")
-            dev.sendEvent(name: 'timestamp', value: now())
-        }
-        else {
-            def dev = getChildDevice(params?.GID)
-            dev.sendEvent(name: "CPM", value: "${params?.CPM}")
-            if 	(params?.CPM.toInteger() < 51)  {
-                dev.sendEvent(name: 'CPM_Display', value: "${params?.CPM} - NORMAL")
-                dev.sendEvent(name: 'CPM_Message', value: "Normal Levels. No action needed.")
-            }
-            else if (params?.CPM.toInteger() < 100) {
-                dev.sendEvent(name: 'CPM_Display', value: "${params?.CPM} - MEDIUM")
-                dev.sendEvent(name: 'CPM_Message', value: "Medium Levels. Monitor regularly.")
-            }
-            else if (params?.CPM.toInteger() < 1000) {
-                dev.sendEvent(name: 'CPM_Display', value: "${params?.CPM} - HIGH")
-                dev.sendEvent(name: 'CPM_Message', value: "High Levels. Investigate Sourse.")
-            }
-            else if (params?.CPM.toInteger() < 2000) {
-                dev.sendEvent(name: 'CPM_Display', value: "${params?.CPM} - VERY HIGH")
-                dev.sendEvent(name: 'CPM_Message', value: "Very High Levels. Leave Area.")
-            }
-            else {
-                dev.sendEvent(name: 'CPM_Display', value: "${params?.CPM} - EXTREMELY HIGH")
-                dev.sendEvent(name: 'CPM_Message', value: "Extremely High Levels. Exacuate Immediately!")
-            }
-            
-	        dev.sendEvent(name: "ACPM", value: "${params?.ACPM}")	
-	        dev.sendEvent(name: "uSV", value: "${params?.uSV}")
-            dev.sendEvent(name: 'timestamp', value: now())
-        }
-        if (params?.AID && gmcUpload){
-			// What about the time <sudo> for the apple car?
-            def url = "http://www.GMCmap.com/log2.asp?AID=${params?.AID}&GID=${params?.GID}&CPM=${params?.CPM}"
-            if (params?.ACPM)url +="&ACPM=${params?.ACPM}"
-            if (params?.uSV)url +="&uSV=${params?.uSV}"
-            if (logEnable)log.debug "gmcmaps.com payload: ${url}"
-            try {
-                httpGet(url) { resp ->
-                    if (logEnable) log.debug "gmcmaps.com responce: ${resp?.data}"
-                    if (resp && (resp.status == 200)) {
-                        def dev = getChildDevice(params?.GID)
-                        dev.sendEvent(name: "upload", value: "${resp?.data}")
-                    }
-                    else {
-                        log.error "Invalid response for gmcmap request: ${resp} ${resp.status}"
-            	    }
-	            }
-	        }
-            catch(Exception e) {
-                log.debug "error occured calling httpget ${e}"
-	        }
-        }
-        else {
-            def dev = getChildDevice(params?.GID)
-            dev.sendEvent(name: "upload", value: "N/A")
-        }
-        html = "<html><head><body>OK.ERR0</body></html>"
-        render contentType: "text/html", data: html, status: 200
+def renderWebsite() {
+    if (logEnable) log.debug "Received metrics: ${params}"
+
+    if (!params?.GID) {
+        render contentType: "text/html", data: "<html><head><body>Error! Geiger Counter is not found.ERR2.</body></html>", status: 200
+        return
     }
-    else {
-        html = "<html><head><body>Error! Geiger Counter is not found.ERR2.</body></html>"
-        render contentType: "text/html", data: html, status: 200
+
+    def dev = getChildDevice(params.GID)
+    if (!dev) {
+        dev = addChildDevice(
+            "sidjohn1",
+            "GMC Geiger Counter Local Device",
+            params.GID,
+            ["name": "Geiger Counter ${params.GID}", "label": "Local GMC Geiger Counter", isComponent: false]
+        )
     }
+
+    updateDevice(dev, params)
+
+    if (params?.AID && gmcUpload) {
+        relayToGmcMap(dev, params)
+    } else {
+        dev.sendEvent(name: "upload", value: "N/A")
+    }
+
+    render contentType: "text/html", data: "<html><head><body>OK.ERR0</body></html>", status: 200
+}
+
+private void updateDevice(dev, params) {
+    // CPM (Geiger / radiation)
+    def cpm = safeInt(params?.CPM)
+    dev.sendEvent(name: "CPM",  value: "${cpm}")
+    dev.sendEvent(name: "ACPM", value: "${safeDecimal(params?.ACPM)}")
+    dev.sendEvent(name: "uSV",  value: "${safeDecimal(params?.uSV)}")
+
+    def (cpmDisplay, cpmMessage) = cpmStatus(cpm)
+    dev.sendEvent(name: "CPM_Display", value: cpmDisplay)
+    dev.sendEvent(name: "CPM_Message", value: cpmMessage)
+
+    // pCi/L (radon) — only present on RadonScan / RadonPRO
+    if (params?.pCi) {
+        def pci = safeDecimal(params.pCi)
+        dev.sendEvent(name: "pCi", value: "${pci}")
+
+        def (radonDisplay, radonMessage) = radonStatus(pci)
+        dev.sendEvent(name: "pCi_Display", value: radonDisplay)
+        dev.sendEvent(name: "pCi_Message", value: radonMessage)
+    }
+
+    dev.sendEvent(name: "timestamp", value: now())
+}
+
+private void relayToGmcMap(dev, params) {
+    // Skip the upload entirely if we're still within a backoff window from a prior HTTP 500
+    if (state.gmcBackoffUntil && now() < state.gmcBackoffUntil) {
+        if (logEnable) log.debug "Skipping gmcmap.com upload, in backoff until ${new Date(state.gmcBackoffUntil)}"
+        dev.sendEvent(name: "upload", value: "Backoff until ${new Date(state.gmcBackoffUntil)}")
+        return
+    }
+
+    def url = "http://www.GMCmap.com/log2.asp?AID=${params.AID}&GID=${params.GID}&CPM=${params.CPM}"
+    if (params?.ACPM) url += "&ACPM=${params.ACPM}"
+    if (params?.uSV)  url += "&uSV=${params.uSV}"
+    if (params?.pCi)  url += "&pCi=${params.pCi}"
+
+    if (logEnable) log.debug "gmcmap.com payload: ${url}"
+
+    try {
+        httpGet([uri: url, contentType: "text/plain", timeout: 10]) { resp ->
+    		def body = resp?.data?.text ?: resp?.data?.toString()
+    		if (logEnable) log.debug "gmcmap.com response: ${body}"
+    		if (resp && resp.status == 200) {
+        		if (state.gmcBackoffUntil) state.remove('gmcBackoffUntil')
+        		dev.sendEvent(name: "upload", value: "${body}")
+    		} else if (resp && resp.status == 500) {
+        		state.gmcBackoffUntil = now() + GMC_BACKOFF_MS
+        		log.error "gmcmap.com returned HTTP 500. Pausing uploads until ${new Date(state.gmcBackoffUntil)}"
+        		dev.sendEvent(name: "upload", value: "Error: 500 - pausing uploads for 24h")
+    		} else {
+        		log.error "Invalid response from gmcmap: ${resp?.status}"
+        		dev.sendEvent(name: "upload", value: "Error: ${resp?.status}")
+    		}
+		}
+    } catch (groovyx.net.http.HttpResponseException e) {
+        // Some HTTP client configs throw on non-2xx statuses instead of handing back a response
+        if (e.response?.status == 500) {
+            state.gmcBackoffUntil = now() + GMC_BACKOFF_MS
+            log.error "gmcmap.com returned HTTP 500. Pausing uploads until ${new Date(state.gmcBackoffUntil)}"
+            dev.sendEvent(name: "upload", value: "Error: 500 - pausing uploads for 24h")
+        } else {
+            log.error "Error calling gmcmap: ${e}"
+            dev.sendEvent(name: "upload", value: "Error: ${e.message}")
+        }
+    } catch (Exception e) {
+        log.error "Error calling gmcmap: ${e}"
+        dev.sendEvent(name: "upload", value: "Error: ${e.message}")
+    }
+}
+
+private List cpmStatus(int cpm) {
+    if      (cpm < 51)   return ["${cpm} - NORMAL",         "Normal levels. No action needed."]
+    else if (cpm < 100)  return ["${cpm} - MEDIUM",         "Medium levels. Monitor regularly."]
+    else if (cpm < 1000) return ["${cpm} - HIGH",           "High levels. Investigate source."]
+    else if (cpm < 2000) return ["${cpm} - VERY HIGH",      "Very high levels. Leave area."]
+    else                 return ["${cpm} - EXTREMELY HIGH", "Extremely high levels. Evacuate immediately!"]
+}
+
+private List radonStatus(BigDecimal pci) {
+    if      (pci < 2.0) return ["${pci} pCi/L - SAFE",      "Safe radon level. No action needed."]
+    else if (pci < 4.0) return ["${pci} pCi/L - ATTENTION", "Medium radon level. Check ventilation regularly."]
+    else                return ["${pci} pCi/L - WARNING",    "Dangerous radon level. Ventilate immediately."]
+}
+
+private int safeInt(val) {
+    try { return val?.toString()?.isInteger() ? val.toString().toInteger() : 0 }
+    catch (e) { return 0 }
+}
+
+private BigDecimal safeDecimal(val) {
+    try { return val?.toString()?.isBigDecimal() ? val.toString().toBigDecimal() : 0.0 }
+    catch (e) { return 0.0 }
 }
 
 def logsOff() {
-	log.warn "debug logging disabled..."
-	app.updateSetting("logEnable", [value: "false", type: "bool"])
+    log.warn "Debug logging disabled."
+    app.updateSetting("logEnable", [value: "false", type: "bool"])
 }
 
 private removeChildDevices(devices) {
-	devices.each {
-		deleteChildDevice(it.deviceNetworkId) // 'it' is default
-	}
+    devices.each { deleteChildDevice(it.deviceNetworkId) }
 }
