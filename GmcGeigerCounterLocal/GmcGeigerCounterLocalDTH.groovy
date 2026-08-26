@@ -13,20 +13,24 @@
 *
 *  Author: Sidney Johnson
 *
-*  Date: 2024-04-29
+*  Date: 2026-08-25
 *
 *	1.0 - Initial Release
 *	1.1 - Added CPM_Display and CPM_Message
+*	1.2 - Added pCi, pCi_Display and pCi_Message
 *
 */
 
 metadata {
 	definition(
-		name: "GMC Geiger Counter Local Device", description: "GMC Geiger Counter Local", namespace: "sidjohn1", author: "sidjohn1", importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalDTH.groovy"){
+		name: "GMC Geiger Counter Local Device", description: "GMC Geiger Counter Local Integration", namespace: "sidjohn1", author: "sidjohn1", importUrl: "https://raw.githubusercontent.com/sidjohn1/hubitat/main/GmcGeigerCounterLocal/GmcGeigerCounterLocalDTH.groovy"){
 		capability "Sensor"
 		attribute "CPM", "NUMBER"                // Count Per Minute reading from this Geiger Counter
         attribute "CPM_Display", "string";       // CPM + short danger level
         attribute "CPM_Message", "string";       // Danger level + reccomedation
+        attribute "pCi", "NUMBER"                // Picocuries per liter
+        attribute "pCi_Display", "string";       // pCi + short danger level
+        attribute "pCi_Message", "string";       // Danger level + reccomedation
 		attribute "ACPM", "NUMBER"               // Average Count Per Minute reading from this Geiger Counter
 		attribute "uSv", "NUMBER"                // uSv/h reading from this Geiger Counter
         attribute "upload", "string"             // upload responce from gmcmap.com
