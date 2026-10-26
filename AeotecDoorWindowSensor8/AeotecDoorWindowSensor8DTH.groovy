@@ -49,8 +49,8 @@ import groovy.transform.Field
 metadata {
     definition(
         name: "Aeotec Door Window Sensor 8",
-        namespace: "Sidjohn1",
-        author: "Sidjohn1",
+        namespace: "sidjohn1",
+        author: "sidjohn1",
     ) {
         capability "TemperatureMeasurement"
         capability "RelativeHumidityMeasurement"
