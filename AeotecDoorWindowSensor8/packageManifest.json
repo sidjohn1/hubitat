@@ -1,0 +1,18 @@
+{
+  "packageName": "Aeotec Door Window Sensor 8",
+  "author": "sidjohn1",
+  "version": "1.0",
+  "minimumHEVersion": "2.1.9",
+  "dateReleased": "2026-10-26",
+  "documentationLink": "https://github.com/sidjohn1/hubitat/blob/main/AeotecDoorWindowSensor8/README.md",
+  "communityLink": "https://github.com/sidjohn1/hubitat/blob/main/AeotecDoorWindowSensor8/README.md",
+  "drivers": [
+    {
+      "id": "d4440299-3836-48e6-a6bb-aa356e56fa92",
+      "name": "Aeotec Door Window Sensor 8",
+      "namespace": "sidjohn1",
+      "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/AeotecDoorWindowSensor8/AeotecDoorWindowSensor8DTH.groovy",
+      "required": true
+    }
+  ]
+}
