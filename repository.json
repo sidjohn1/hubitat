@@ -14,9 +14,10 @@
     {
       "id": "4b0b767a-2538-49dd-8820-b4689d268361",
       "name": "Aeotec Door Window Sensor 8",
-      "tags": ["ZWave. Devices", "Doors & Windows"],
+      "category": "Integrations",
+      "tags": ["ZWave" "Multi Sensors", "Doors & Windows"],
       "location": "https://raw.githubusercontent.com/sidjohn1/hubitat/main/AeotecDoorWindowSensor8/packageManifest.json",
-      "description": "Aeotec Door Window Sensor 8"
+      "description": "Aeotec Door Window Sensor 8 Driver"
     },
     {
       "id": "93c43a3c-278a-46c9-a2a8-064c6196092a",
